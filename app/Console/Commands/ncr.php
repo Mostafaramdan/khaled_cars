@@ -47,7 +47,7 @@ class ncr extends Command
         fclose($file);
 
         $myfile = fopen("routes/api.php", "a") or die("Unable to open file!");
-        $txt = "route::post('{$folderName}','index@index');";
+        $txt = "Route::ANY('{$folderName}',[index::class, 'index']);";
         fwrite($myfile, "\n". $txt);
         fclose($myfile);
 

@@ -10,11 +10,14 @@ class insurances extends Model
     use HasFactory;
     protected $table = 'insurances';
     protected $guarded = [];
-    public $timestamps = ['created_at'];
-    const UPDATED_AT   = null;
+    public $timestamps = false;
 
     public function users(){
         return $this->belongsTo(users::class);
+    }
+
+    public function insurances_slides(){
+        return $this->belongsTo(insurances_slides::class,'insurances_slides_id');
     }
 
     public function images(){

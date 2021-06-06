@@ -12,13 +12,18 @@ class getBidsController extends index
 {
     public static function api(){
 
-        $records=  biddings::doesntHave('orders')
+        $records=  biddings::whereHas('bidders',function($q){
+                                return $q->where('users_id',self::$account->id)
+                                        ->whereDoesntHave('orders');
+                            })
                            ->where('end_at','>',date('Y-m-d H:i:s'))
                            ->orderBy('id','DESC')
-                           ->whereHas('product',function ($q){
-                               $brandId=self::$request->brandId;
-                                return $brandId ? $q->where('brands_id',$brandId):$q;
-                           })
+                           ->when(self::$request->brandId!= null,function($q){
+                                return $q->whereHas('product',function ($q){
+                                    $brandId=self::$request->brandId;
+                                        return $brandId ? $q->where('brands_id',$brandId):$q;
+                                });
+                            })
                            ->get();
         return [
             "status"=>$records->forPage(self::$request->page+1,self::$itemPerPage)->count()?200:204,

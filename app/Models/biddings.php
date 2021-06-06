@@ -39,10 +39,7 @@ class biddings extends Model
     {
         return $this->belongsTo(products::class,'products_id');
     }
-    function orders()
-    {
-        return $this->hasMany(orders::class,'biddings_id');
-    }
+    
     function reviews()
     {
         return $this->hasMany(reviews::class,'biddings_id');

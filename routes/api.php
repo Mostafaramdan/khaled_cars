@@ -53,6 +53,10 @@ Route::ANY('/getFeatures',[index::class, 'index']);
 Route::ANY('/getBrands',[index::class, 'index']);
 Route::ANY('/getMyFavorites',[index::class, 'index']);
 Route::ANY('/getMyBids',[index::class, 'index']);
+Route::ANY('/getModels',[index::class, 'index']);
+Route::ANY('/getModelYears',[index::class, 'index']);
 
-route::post('getModels','index@index');
-route::post('getModelYears','index@index');
+Route::ANY('getInsurancesSlides',[index::class, 'index']);
+Route::ANY('getInsurancesSlides',[index::class, 'index']);
+Route::ANY('getTraders',[index::class, 'index']);
+Route::ANY('getBidsByATrader',[index::class, 'index']);

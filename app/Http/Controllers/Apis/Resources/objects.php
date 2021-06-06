@@ -44,6 +44,18 @@ class objects extends index
         return $object;
     }
 
+    public static function trader ($record)
+    {
+        if($record == null  ) {return null;}
+        $object = [];
+        $object['id'] = $record->id;
+        $object['name'] = $record->name;
+        !$record->image?:$object['image'] =self::image($record->image);
+        $object['email'] = $record->email;
+        $object['phone'] = $record->phone;
+        return $object;
+    }
+
     public static function userMin ($record)
     {
         if($record == null  ) {return null;}
@@ -155,6 +167,7 @@ class objects extends index
 
     public static function image ($record)
     {
+        if(!$record)return;
         $object = [];
         $object['id'] = $record->id;
         $object['image'] = Str::contains($record->image,'http') ? $record->image :Request()->root().$record->image;
@@ -165,7 +178,18 @@ class objects extends index
         $object = [];
         $object['id'] = $record->id;
         $object['name'] = $record->{'name_'.self::$lang};
-        $object['images'] = self::ArrayOfObjects($record->images??[],'image');
+        !$record->image? : $object['image'] = self::image($record->image);
+        return $object;
+    }
+    public static function insurances_slide ($record)
+    {
+        $object = [];
+        $object['id'] = $record->id;
+        $object['name'] = $record->{'name_'.self::$lang};
+        $object['description'] = $record->{'description_'.self::$lang};
+        !$record->image? :$object['images'] = self::image($record->image);
+        $object['price'] = $record->price;
+        $object['totalBiddings'] = $record->total_biddings;
         return $object;
     }
 

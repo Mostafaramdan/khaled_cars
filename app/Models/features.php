@@ -12,9 +12,9 @@ class features extends Model
     protected  $fillable=['name_ar','name_en','images'];
     public $timestamps=false;
 
-    function GetImagesAttribute()
+    function image()
     {
-        return images::find(json_decode($this->attributes['images'],true));
+        return $this->belongsTo(images::class,'images_id');
     }
 }
 

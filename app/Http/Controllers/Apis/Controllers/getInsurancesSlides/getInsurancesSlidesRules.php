@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers\Apis\Controllers\payInsurance;
+namespace App\Http\Controllers\Apis\Controllers\getInsurancesSlides;
 
 use App\Http\Controllers\Apis\Controllers\index;
 use App\Http\Controllers\Apis\Resources\objects;
@@ -8,36 +8,35 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Apis\Helper\helper;
 
-class payInsuranceRules extends index
+class getInsurancesSlidesRules extends index
 {
     public static function rules (){
 
         $rules=[
             "apiToken"   =>"required|exists:users,apiToken",
-            'image'    =>'required|string',
-            "insuranceSlide"     =>"required|exists:insurances_slides,id",
+            "page"      =>"required|numeric"
         ];
 
         $messages=[
             "apiToken.required"     =>400,
             "apiToken.exists"       =>405,
 
-            "image.required"       =>400,
+            "userId.required"       =>400,
+            "userId.exists"         =>405,
 
-            "insuranceSlide.required"       =>400,
-            "insuranceSlide.exists"         =>405,
-
+            "page.required"         =>400,
+            "page.numeric"          =>405
         ];
 
         $messagesAr=[
             "apiToken.required"     =>"يجب ادخال التوكن",
             "apiToken.exists"       =>"هذا التوكن غير موجود",
 
-            "insuranceSlide.exists"         =>"رقم الشريحة غير موجود",
-            "insuranceSlide.required"       =>"يجب ادخال رقم الشريحة",
+            "userId.exists"         =>"هذا الشخص غير موجود",
+            "userId.required"       =>"يجب ادخال رقم الشخص",
 
-            "image.required"       =>"يجب ادخال الصورة ",
-
+            "page.required"         =>"يجب ادخال رقم الصفحة",
+            "page.numeric"          =>"يجب ادخال رقم الصفحة بشكل صحيح",
         ];
 
         $messagesEn=[

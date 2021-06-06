@@ -7,15 +7,16 @@ use App\Http\Controllers\Apis\Helper\helper;
 use App\Http\Controllers\Apis\Controllers\index;
 use App\Http\Controllers\Apis\Resources\objects;
 use App\Models\bidders;
+use App\Models\biddings;
 use App\Models\insurances;
 
 class addBidController extends index
 {
     public static function api()
     {
-
         $insurance = insurances::where('users_id',self::$account->id)
-                               ->where('biddings_id',self::$request->bidId)
+                               ->where('status','accept')
+                               ->orderBy('id','DESC')
                                ->first();
         if(!$insurance){
             return [
@@ -23,10 +24,20 @@ class addBidController extends index
                 'message'=>'you should pay insurance first .'
             ];
         }
-        if($insurance && $insurance->status== 'waiting'){
+        $total = biddings::whereHas('bidders',function($q){
+                    return $q->where('users_id',self::$account->id)
+                                ->whereDoesntHave('orders');
+                })
+                ->withCount(['bidders AS max_biddings' => function($query) {
+                    $query->select(\DB::raw('coalesce(MAX(price),0)'));
+                }])
+                ->get()
+                ->sum('max_biddings');
+        if($total > $insurance->insurances_slides->total_biddings){
             return [
                 'status'=>410,
-                'message'=>'you have been paid insurances before, and Awaiting review'
+                'message'=>'you have been paid insurances before, but exceed  limit, your limit is '.$insurance->insurances_slides->total_biddings,
+                'yourTotalOpenBiddings'=>$total
             ];
         }
 

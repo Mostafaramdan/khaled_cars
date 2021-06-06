@@ -169,5 +169,12 @@ class helper extends generalHelp
 			return $regions->first()->id;
 		return $cityName;
 	}
+    public static function get($records)
+    {
+        $totalPages=ceil($records->count()/self::$itemPerPage);
+        $records = $records->forPage(self::$request->page+1,self::$itemPerPage)->get();
+        $status = $records->count()?200:204;
+        return [$records,$totalPages,$status ];
+    }
 
 }
