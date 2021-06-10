@@ -9,7 +9,7 @@
         <div class="my-auto">
             <div class="d-flex">
                 <h4 class="content-title mb-0 my-auto">طلبات دفع التأمين</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ عرض
-                طلب الدفع ( {{ $insurance->users->name }} )</span>
+                طلب الدفع ( {{ $insurance->user->name }} )</span>
             </div>
         </div>
     </div>
@@ -46,8 +46,8 @@
                             <tbody>
                             <tr>
                                 <td colspan="4" alt="centered image">
-                                    @if ($insurance->images->image !== null)
-                                        <center><img src="{{ asset('assets/upload/insurance/' . $insurance->images->image) }}" class="img-fluid center" width="250" height="250"></center>
+                                    @if ($insurance->image->image !== null)
+                                        <center><img src="{{ asset('assets/upload/insurance/' . $insurance->image->image) }}" class="img-fluid center" width="250" height="250"></center>
                                     @else
                                         <center><img src="{{ asset('assets/upload/insurance/default.png') }}" class="img-fluid" width="250" height="250"></center>
                                     @endif
@@ -55,11 +55,10 @@
                             </tr>
                             <tr>
                                 <th>اسم المستخدم</th>
-                                <td><a href="{{ route('users.show', $insurance->users->id) }}">{{ $insurance->users->name }}</td>
-                                <th>اسم المنتج</th>
-                                <td><a href="{{ route('biddings.show', $insurance->biddings->id) }}">{{ $insurance->biddings->products->name_ar }}</a></td>
+                                <td><a href="{{ route('users.show', $insurance->user->id) }}">{{ $insurance->user->name }}</td>
+                                <th>شريحة المنتج</th>
+                                <td>{{$insurance->insurances_slide->name_ar}}</td>
                             </tr>
-
                             <tr>
                                 <th>الحالة</th>
                                 @if($insurance->status == 'waiting')

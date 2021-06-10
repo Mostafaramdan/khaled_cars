@@ -41,45 +41,42 @@
                             <a class="btn btn-primary" href="{{ route('countries.index') }}">رجوع</a>
                         </div>
                     </div><br>
-                    {!! Form::model($country,['route' => ['countries.update' , $country->id], 'method' => 'put']) !!}
-                    <div class="row row-sm">
+                    <form action="{{route('countries.update',$country->id)}}" method="post" enctype="multipart/form-data">
+                        {{csrf_field()}}
+                        @method('put')
+                        <div class="row row-sm">
 
                         <div class="col-lg-12 col-xl-12">
                             <div class="card card-dashboard-map-one">
                                 <div class="" style="width: 100%">
                                 </div>
                                 <div>
-                                    {!! Html::decode(Form::label('code', 'الكود : <span class="tx-danger">*</span>'))!!}
-                                    {!! Form::text('code', old('code'),['class'=>'form-control  mg-b-20"
-                                                       data-parsley-class-handler="#lnWrapper' ]) !!}
+                                    <label for="exampleInputEmail1">الكود : <span class="tx-danger">*</span> </label>
+                                    <input type="text" value="{{old('code',$country->code)}}" class="form-control" id="code" name="code" required>
                                     @error('code')<span class="text-danger">{{ $message }}</span>@enderror
                                 </div>
                                 <br>
                                 <div>
-                                    {!! Html::decode(Form::label('mobile_ex', 'Mobile Ex : <span class="tx-danger">*</span>'))!!}
-                                    {!! Form::text('mobile_ex', old('mobile_ex'),['class'=>'form-control  mg-b-20"
-                                                       data-parsley-class-handler="#lnWrapper' ]) !!}
+                                    <label for="exampleInputEmail1">Mobile Ex : <span class="tx-danger">*</span> </label>
+                                    <input type="text" value="{{old('mobile_ex',$country->mobile_ex)}}" class="form-control" id="mobile_ex" name="mobile_ex" required>
                                     @error('mobile_ex')<span class="text-danger">{{ $message }}</span>@enderror
                                 </div>
                                 <br>
                                 <div>
-                                    {!! Html::decode(Form::label('call_key', 'مفتاح البلد : <span class="tx-danger">*</span>'))!!}
-                                    {!! Form::text('call_key', old('call_key'),['class'=>'form-control  mg-b-20"
-                                                       data-parsley-class-handler="#lnWrapper' ]) !!}
+                                    <label for="exampleInputEmail1">مفتاح البلد : <span class="tx-danger">*</span> </label>
+                                    <input type="text" value="{{old('call_key',$country->call_key)}}" class="form-control" id="call_key" name="call_key" required>
                                     @error('call_key')<span class="text-danger">{{ $message }}</span>@enderror
                                 </div>
                                 <br>
                                 <div>
-                                    {!! Html::decode(Form::label('name_ar', 'الأسم بالعربية : <span class="tx-danger">*</span>'))!!}
-                                    {!! Form::text('name_ar', old('name_ar'),['class'=>'form-control  mg-b-20"
-                                                       data-parsley-class-handler="#lnWrapper' ]) !!}
+                                    <label for="exampleInputEmail1">الأسم بالعربية : <span class="tx-danger">*</span> </label>
+                                    <input type="text" value="{{old('name_ar',$country->name_ar)}}" class="form-control" id="name_ar" name="name_ar" required>
                                     @error('name_ar')<span class="text-danger">{{ $message }}</span>@enderror
                                 </div>
                                 <br>
                                 <div>
-                                    {!! Html::decode(Form::label('name_en', 'الأسم بالأنجليزية : <span class="tx-danger">*</span>'))!!}
-                                    {!! Form::text('name_en', old('name_en'),['class'=>'form-control  mg-b-20"
-                                                       data-parsley-class-handler="#lnWrapper' ]) !!}
+                                    <label for="exampleInputEmail1">الأسم بالانجليزية : <span class="tx-danger">*</span> </label>
+                                    <input type="text" value="{{old('name_en',$country->name_en)}}" class="form-control" id="name_en" name="name_en" required>
                                     @error('name_en')<span class="text-danger">{{ $message }}</span>@enderror
                                 </div>
                                 <br>
@@ -89,9 +86,10 @@
                         </div>
 
                         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                            {!! Form::submit('تعديل', ['class' => 'btn btn-main-primary pd-x-20']) !!}
+                            <button type="submit" class="btn btn-primary">تعديل</button>
                         </div>
-                        {{Form::close()}}
+                </div>
+                </form>
 
                     </div>
                 </div>

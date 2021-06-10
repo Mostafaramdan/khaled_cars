@@ -9,7 +9,7 @@
         <div class="my-auto">
             <div class="d-flex">
                 <h4 class="content-title mb-0 my-auto">العلامات التجارية</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ تعديل
-                العلامة التجارية ( {{ $brand->name }} )</span>
+                العلامة التجارية ( {{ $brand->name_ar }} )</span>
             </div>
         </div>
     </div>
@@ -41,32 +41,32 @@
                             <a class="btn btn-primary" href="{{ route('brands.index') }}">رجوع</a>
                         </div>
                     </div><br>
-                    {!! Form::model($brand,['route' => ['brands.update' , $brand->id], 'method' => 'put']) !!}
-                    <div class="row row-sm">
-
+                    <form action="{{route('brands.update',$brand->id)}}" method="post" enctype="multipart/form-data">
+                        {{csrf_field()}}
+                        @method('put')
+                        <div class="row row-sm">
                         <div class="col-lg-12 col-xl-12">
                             <div class="card card-dashboard-map-one">
                                 <div class="" style="width: 100%">
                                 </div>
                                 <div>
-                                    {!! Html::decode(Form::label('name_ar', 'الأسم بالعربية : <span class="tx-danger">*</span>'))!!}
-                                    {!! Form::text('name_ar', old('name_ar'),['class'=>'form-control  mg-b-20"
-                                                       data-parsley-class-handler="#lnWrapper' ]) !!}
+                                    <label for="exampleInputEmail1">الأسم بالعربية : <span class="tx-danger">*</span> </label>
+                                    <input type="text" value="{{old('name_ar',$brand->name_ar)}}" class="form-control" id="name_ar" name="name_ar" required>
                                     @error('name_ar')<span class="text-danger">{{ $message }}</span>@enderror
                                 </div>
                                 <br>
                                 <div>
-                                    {!! Html::decode(Form::label('name_en', 'الأسم بالأنجليزية : <span class="tx-danger">*</span>'))!!}
-                                    {!! Form::text('name_en', old('name_en'),['class'=>'form-control  mg-b-20"
-                                                       data-parsley-class-handler="#lnWrapper' ]) !!}
+                                    <label for="exampleInputEmail1">الأسم بالنجليزية : <span class="tx-danger">*</span> </label>
+                                    <input type="text" value="{{old('name_en',$brand->name_en)}}" class="form-control" id="name_en" name="name_en" required>
                                     @error('name_en')<span class="text-danger">{{ $message }}</span>@enderror
                                 </div>
                                 <br>
+
                                 <div>
-                                    {!! Html::decode(Form::label('categories_id', 'القسم : <span class="tx-danger">*</span>'))!!}
-                                    {!! Form::select('categories_id', App\Models\categories::pluck('name_ar', 'id'),old('categories_id'),['class'=>'form-control mg-b-20"
-                                                       data-parsley-class-handler="#lnWrapper' ]) !!}
-                                    @error('categories_id')<span class="text-danger">{{ $message }}</span>@enderror
+                                    <label for="exampleInputEmail1" >الصورة :  </label>
+                                    <input type="file" class="form-control form-control"
+                                           data-parsley-class-handler="#lnWrapper" id="image" name="image">
+                                    @error('image')<span class="text-danger">{{ $message }}</span>@enderror
                                 </div>
                                 <br>
 
@@ -75,10 +75,11 @@
 
                         </div>
 
-                        <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                            {!! Form::submit('تعديل', ['class' => 'btn btn-main-primary pd-x-20']) !!}
+                            <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+                                <button type="submit" class="btn btn-primary">تعديل</button>
+                            </div>
                         </div>
-                        {{Form::close()}}
+                    </form>
 
                     </div>
                 </div>

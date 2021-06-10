@@ -44,10 +44,12 @@
         <div class="col-xl-12">
             <div class="card">
                 <div class="card-header pb-0">
+                    @if (str_contains(auth('admin')->user()->permissions, "add_user") !== false)
                     <div class="col-sm-1 col-md-2">
-
                         <a class="btn btn-primary modal-effect" href="#modaldemo8" data-toggle="modal">اضافة مستخدم</a>
                     </div>
+                    @endif
+                    @include('admin.users.filter.filter')
                 </div>
                 <div class="card-body">
                     <div class="table-responsive hoverable-table">
@@ -62,42 +64,54 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach ($users as $key => $user)
+                            @if(isset($users))
+                            @forelse ($users as $key => $user)
                                 <tr>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->phone !== null ? $user->phone : 'غير متوفر' }}</td>
                                     <td>{{ $user->email !== null ? $user->email : 'غير متوفر'}}</td>
                                     @if($user->is_active == 1)
-
                                         <td>
-                                            {!! Form::model($user,['route' => ['users.status' , $user->id], 'method' => 'put']) !!}
-                                            {!! Form::submit('مفعل', ['class' => 'btn btn-sm btn-success pd-x-20']) !!}
-                                            {!! Form::close() !!}
-
+                                            <form action="{{route('users.status',$user->id)}}" method="post">
+                                                {{csrf_field()}}
+                                                @method('put')
+                                                <button type="submit" class="btn btn-sm btn-success pd-x-20">مفعل</button>
+                                            </form>
                                         </td>
                                     @else
                                         <td>
-                                            {!! Form::model($user,['route' => ['users.status' , $user->id], 'method' => 'put']) !!}
-                                            {!! Form::submit('غير مفعل', ['class' => 'btn btn-sm btn-danger pd-x-20']) !!}
-                                            {!! Form::close() !!}
-
+                                            <form action="{{route('users.status',$user->id)}}" method="post">
+                                                {{csrf_field()}}
+                                                @method('put')
+                                                <button type="submit" class="btn btn-sm btn-danger pd-x-20">غير مفعل</button>
+                                            </form>
                                         </td>
                                     @endif
                                     <td>
                                         <a href="{{ route('users.show', $user->id) }}" class="btn btn-sm btn-warning"
                                            title="تعديل"> <i class="las la-eye"></i> عرض </a>
+                                        @if (str_contains(auth('admin')->user()->permissions, "edit_user") !== false)
                                         <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-info"
                                            title="تعديل"> <i class="las la-pen"></i> تعديل</a>
+                                        @endif
+                                        @if (str_contains(auth('admin')->user()->permissions, "delete_user") !== false)
                                         <button class="btn btn-danger btn-sm " data-id="{{ $user->id }}"
                                                 data-name_ar="{{ $user->name }}" data-toggle="modal"
                                                 data-target="#modaldemo9"> <i class="las la-trash"></i> حذف</button>
+                                        @endif
                                     </td>
                                 </tr>
-                            @endforeach
+                            @empty
+                                <tr>
+                                    <td colspan="7" class="text-center">لم يتم العثور علي أي نتائج</td>
+                                </tr>
+                            @endforelse
 
 
                             </tbody>
                         </table>
+                        <br><div class="text-center">{!! $users->links('layouts.pagination') !!}</div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -113,51 +127,48 @@
                         <h6 class="modal-title">اضافة مستخدم</h6><button aria-label="Close" class="close"
                                                                          data-dismiss="modal" type="button"><span aria-hidden="true">&times;</span></button>
                     </div>
-                    {{ Form::open(['route' => 'users.store', 'class' => 'parsley-style-1', 'method' => 'post', 'files'=> true]) }}
-                    @csrf
+                    <form action="{{ route('users.store') }}" class=parsley-style-1' method="post" enctype="multipart/form-data">
+                        @csrf
                     <div class="modal-body">
                         <div>
-                            {!! Html::decode(Form::label('name', 'الأسم : <span class="tx-danger">*</span>'))!!}
-                            {!! Form::text('name', old('name'),['class'=>'form-control  mg-b-20"
-                                               data-parsley-class-handler="#lnWrapper' ]) !!}
+                            <label for="exampleInputEmail1">الأسم : <span class="tx-danger">*</span> </label>
+                            <input type="text" class="form-control" id="name" name="name" required>
                             @error('name')<span class="text-danger">{{ $message }}</span>@enderror
                         </div>
                         <br>
                         <div>
-                            {!! Html::decode(Form::label('phone', 'رقم الهاتف : <span class="tx-danger">*</span>'))!!}
-                            {!! Form::text('phone', old('phone'),['class'=>'form-control  mg-b-20"
-                                               data-parsley-class-handler="#lnWrapper' ]) !!}
-                            @error('phone')<span class="text-danger">{{ $message }}</span>@enderror
-                        </div>
-                        <br>
-
-                        <div>
-                            {!! Html::decode(Form::label('email', 'الايميل : <span class="tx-danger">*</span>'))!!}
-                            {!! Form::text('email', old('email'),['class'=>'form-control  mg-b-20"
-                                               data-parsley-class-handler="#lnWrapper' ]) !!}
+                            <label for="exampleInputEmail1">البريد الألكتروني : <span class="tx-danger">*</span> </label>
+                            <input type="email" class="form-control" id="email" name="email" required>
                             @error('email')<span class="text-danger">{{ $message }}</span>@enderror
                         </div>
                         <br>
-
                         <div>
-                            {!! Html::decode(Form::label('password', 'كلمة السر : <span class="tx-danger">*</span>'))!!}
-                            {!! Form::password('password', ['class'=>'form-control  mg-b-20"
-                                               data-parsley-class-handler="#lnWrapper' ]) !!}
+                            <label for="exampleInputEmail1">رقم الهاتف : <span class="tx-danger">*</span> </label>
+                            <input type="text" class="form-control" id="phone" name="phone" required>
+                            @error('phone')<span class="text-danger">{{ $message }}</span>@enderror
+                        </div>
+                        <br>
+                        <div>
+                            <label for="exampleInputEmail1">كلمة المرور : <span class="tx-danger">*</span> </label>
+                            <input type="password" class="form-control" id="password" name="password" required>
                             @error('password')<span class="text-danger">{{ $message }}</span>@enderror
                         </div>
                         <br>
 
                         <div>
-                            {!! Html::decode(Form::label('lang', 'اللغة : <span class="tx-danger">*</span>'))!!}
-                            {!! Form::select('lang',  array("ar"=>"العربية","en" => "الانجليزية"),old('lang'), array( 'class' => 'form-control  nice-select  custom-select', 'tabindex' => '2',)) !!}
+                            <label for="exampleInputEmail1">اللغة : <span class="tx-danger">*</span> </label>
+                            <select class="form-control" name="lang" id="lang">
+                                <option value="ar" >العربية</option>
+                                <option value="en" >الانجليزية</option>
+                                </select>
                             @error('lang')<span class="text-danger">{{ $message }}</span>@enderror
                         </div>
                         <br>
 
                         <div>
-                            {!! Html::decode(Form::label('image', 'الصورة : '))!!}
-                            {!! Form::file('image',['class'=>'form-control form-control"
-                                               data-parsley-class-handler="#lnWrapper' ]) !!}
+                            <label for="exampleInputEmail1" >الصورة :  </label>
+                            <input type="file" class="form-control form-control"
+                                   data-parsley-class-handler="#lnWrapper" id="image" name="image">
                             @error('image')<span class="text-danger">{{ $message }}</span>@enderror
                         </div>
                         <br>
@@ -165,9 +176,9 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">الغاء</button>
-                        {!! Form::submit('إضافة', ['class' => 'btn btn-main-primary']) !!}
+                        <button type="submit" class="btn btn-primary">اضافة</button>
                     </div>
-                    {{Form::close()}}
+                    </form>
                 </div>
             </div>
         </div>

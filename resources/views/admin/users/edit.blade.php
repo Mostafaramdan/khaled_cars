@@ -41,61 +41,52 @@
                             <a class="btn btn-primary" href="{{ route('users.index') }}">رجوع</a>
                         </div>
                     </div><br>
-                    {!! Form::model($user,['route' => ['users.update' , $user->id], 'method' => 'put', 'files'=>true]) !!}
-                    <div class="row row-sm">
+                    <form action="{{route('users.update',$user->id)}}" method="post" enctype="multipart/form-data">
+                        {{csrf_field()}}
+                        @method('put')
 
+                        <div class="row row-sm">
                         <div class="col-lg-12 col-xl-12">
                             <div class="card card-dashboard-map-one">
                                 <div class="" style="width: 100%">
                                 </div>
                                 <div>
-                                    {!! Html::decode(Form::label('name', 'الأسم : <span class="tx-danger">*</span>'))!!}
-                                    {!! Form::text('name', old('name'),['class'=>'form-control  mg-b-20"
-                                                       data-parsley-class-handler="#lnWrapper' ]) !!}
+                                    <label for="exampleInputEmail1">الأسم : <span class="tx-danger">*</span> </label>
+                                    <input type="text" value="{{old('name',$user->name)}}" class="form-control" id="name" name="name" required>
                                     @error('name')<span class="text-danger">{{ $message }}</span>@enderror
                                 </div>
                                 <br>
                                 <div>
-                                    {!! Html::decode(Form::label('phone', 'رقم الهاتف : <span class="tx-danger">*</span>'))!!}
-                                    {!! Form::text('phone', old('phone'),['class'=>'form-control  mg-b-20"
-                                                       data-parsley-class-handler="#lnWrapper' ]) !!}
-                                    @error('phone')<span class="text-danger">{{ $message }}</span>@enderror
-                                </div>
-                                <br>
-
-                                <div>
-                                    {!! Html::decode(Form::label('email', 'الايميل : <span class="tx-danger">*</span>'))!!}
-                                    {!! Form::text('email', old('email'),['class'=>'form-control  mg-b-20"
-                                                       data-parsley-class-handler="#lnWrapper' ]) !!}
+                                    <label for="exampleInputEmail1">البريد الألكتروني : <span class="tx-danger">*</span> </label>
+                                    <input type="email" value="{{old('email',$user->email)}}" class="form-control" id="email" name="email" required>
                                     @error('email')<span class="text-danger">{{ $message }}</span>@enderror
                                 </div>
                                 <br>
-
                                 <div>
-                                    {!! Html::decode(Form::label('password', 'كلمة السر : <span class="tx-danger">*</span>'))!!}
-                                    {!! Form::password('password', ['class'=>'form-control  mg-b-20"
-                                                       data-parsley-class-handler="#lnWrapper' ]) !!}
+                                    <label for="exampleInputEmail1">رقم الهاتف : <span class="tx-danger">*</span> </label>
+                                    <input type="text" value="{{old('phone',$user->phone)}}" class="form-control" id="phone" name="phone" required>
+                                    @error('phone')<span class="text-danger">{{ $message }}</span>@enderror
+                                </div>
+                                <br>
+                                <div>
+                                    <label for="exampleInputEmail1">كلمة المرور : <span class="tx-danger">*</span> </label>
+                                    <input type="password" class="form-control" id="password" name="password" >
                                     @error('password')<span class="text-danger">{{ $message }}</span>@enderror
                                 </div>
                                 <br>
-
                                 <div>
-                                    {!! Html::decode(Form::label('lang', 'اللغة : <span class="tx-danger">*</span>'))!!}
-                                    {!! Form::select('lang',  array("ar"=>"العربية","en" => "الانجليزية"),old('lang'), array( 'class' => 'form-control  nice-select  custom-select', 'tabindex' => '2',)) !!}
+                                    <label for="exampleInputEmail1">اللغة : <span class="tx-danger">*</span> </label>
+                                    <select class="form-control" name="lang" id="lang">
+                                        <option value="ar" @if (old('lang', str_contains($user->lang, "ar")) == 'ar') selected @endif >العربية</option>
+                                        <option value="en" @if (old('lang', str_contains($user->lang, "en")) == 'en') selected @endif>الانجليزية</option>
+                                    </select>
                                     @error('lang')<span class="text-danger">{{ $message }}</span>@enderror
                                 </div>
                                 <br>
                                 <div>
-                                    {!! Html::decode(Form::label('currencies_id', 'العملة : <span class="tx-danger">*</span>'))!!}
-                                    {!! Form::select('currencies_id', App\Models\currencies::pluck('name_ar', 'id'),old('currencies_id'),['class'=>'form-control mg-b-20"
-                                                       data-parsley-class-handler="#lnWrapper' ]) !!}
-                                    @error('currencies_id')<span class="text-danger">{{ $message }}</span>@enderror
-                                </div>
-                                <br>
-                                <div>
-                                    {!! Html::decode(Form::label('image', 'الصورة : '))!!}
-                                    {!! Form::file('image',['class'=>'form-control form-control"
-                                                       data-parsley-class-handler="#lnWrapper' ]) !!}
+                                    <label for="exampleInputEmail1" >الصورة :  </label>
+                                    <input type="file" class="form-control form-control"
+                                           data-parsley-class-handler="#lnWrapper" id="image" name="image">
                                     @error('image')<span class="text-danger">{{ $message }}</span>@enderror
                                 </div>
                                 <br>
@@ -107,9 +98,10 @@
                         </div>
 
                         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                            {!! Form::submit('تعديل', ['class' => 'btn btn-main-primary pd-x-20']) !!}
+                            <button type="submit" class="btn btn-primary">تعديل</button>
                         </div>
-                        {{Form::close()}}
+                        </div>
+                        </form>
 
                     </div>
                 </div>

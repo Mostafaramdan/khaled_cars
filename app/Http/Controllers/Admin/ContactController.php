@@ -9,12 +9,20 @@ use App\Models\contacts;
 class ContactController extends Controller
 {
     public function index(){
-        $contacts = contacts::with('user')->get();
+        if (str_contains(auth('admin')->user()->permissions, "contact") !== true)
+        {
+            abort('403','You don\'t have this permission');
+        }
+        $contacts = contacts::with('user')->paginate(self::$itemPerPage);
         return view('admin.contacts.index',compact('contacts'));
     }
 
     public function updateStatus( Request $request, $id)
     {
+        if (str_contains(auth('admin')->user()->permissions, "contact") !== true)
+        {
+            abort('403','You don\'t have this permission');
+        }
         $country = contacts::where('id', '=', $id)->first();
         if($country->is_open ==  1)
         {

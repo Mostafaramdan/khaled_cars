@@ -10,12 +10,32 @@ use Illuminate\Support\Facades\Validator;
 class CountryController extends Controller
 {
     public function index(){
-        $countries = countries::all();
+        if (str_contains(auth('admin')->user()->permissions, "show_country") !== true)
+        {
+            abort('403','You don\'t have this permission');
+        }
+        $keyword = (isset(\request()->keyword) && \request()->keyword != '') ? \request()->keyword : null;
+        $limit_by = (isset(\request()->limit_by) && \request()->limit_by != '') ? \request()->limit_by : self::$itemPerPage;
+
+        $countries = countries::where('id', '!=', null);
+
+        if ($keyword != null) {
+            $countries = countries::where('name_ar', 'LIKE', "%{$keyword}%")
+                ->orWhere('name_en', 'LIKE', "%{$keyword}%")
+                ->orWhere('code', 'LIKE', "%{$keyword}%")
+                ->orWhere('mobile_ex', 'LIKE', "%{$keyword}%")
+                ->orWhere('call_key', 'LIKE', "%{$keyword}%");
+        }
+        $countries = $countries->paginate($limit_by);
         return view('admin.countries.index',compact('countries'));
     }
 
 
     public function destroy(Request $request){
+        if (str_contains(auth('admin')->user()->permissions, "delete_country") !== true)
+        {
+            abort('403','You don\'t have this permission');
+        }
         $country = countries::findOrFail($request->id);
         $country->delete();
         toastr()->success('تم حذف البلد بنجاح');
@@ -24,6 +44,10 @@ class CountryController extends Controller
 
     public function store(Request $request)
     {
+        if (str_contains(auth('admin')->user()->permissions, "add_country") !== true)
+        {
+            abort('403','You don\'t have this permission');
+        }
         $validate = Validator::make($request->all(), [
             'code' => 'required|max:2',
             'mobile_ex' => 'required|max:20',
@@ -51,6 +75,10 @@ class CountryController extends Controller
 
     public function edit($id)
     {
+        if (str_contains(auth('admin')->user()->permissions, "edit_country") !== true)
+        {
+            abort('403','You don\'t have this permission');
+        }
         $country = countries::where('id', '=', $id)->first();
         return view('admin.countries.edit', compact('country'));
     }
@@ -73,7 +101,10 @@ class CountryController extends Controller
     }
 
     public function update(Request $request,$id){
-
+        if (str_contains(auth('admin')->user()->permissions, "edit_country") !== true)
+        {
+            abort('403','You don\'t have this permission');
+        }
         $country = countries::where('id', '=', $id)->first();
         $validate = Validator::make($request->all(), [
             'code' => 'required|max:2',

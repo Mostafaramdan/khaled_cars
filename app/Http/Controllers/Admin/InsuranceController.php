@@ -10,18 +10,30 @@ use Illuminate\Support\Facades\Validator;
 class InsuranceController extends Controller
 {
     public function index(){
-        $insurances = insurances::with(['users','biddings'])->get();
+        if (str_contains(auth('admin')->user()->permissions, "show_insurance") !== true)
+        {
+            abort('403','You don\'t have this permission');
+        }
+        $insurances = insurances::with(['user','insurances_slide'])->paginate(self::$itemPerPage);
         return view('admin.insurances.index',compact('insurances'));
     }
 
     public function show($id){
-        $insurance = insurances::with(['users','biddings','images'])
+        if (str_contains(auth('admin')->user()->permissions, "show_insurance") !== true)
+        {
+            abort('403','You don\'t have this permission');
+        }
+        $insurance = insurances::with(['user','insurances_slide','image'])
             ->where('id','=', $id)
             ->first();
         return view('admin.insurances.show',compact('insurance'));
     }
 
     public function destroy(Request $request){
+        if (str_contains(auth('admin')->user()->permissions, "delete_insurance") !== true)
+        {
+            abort('403','You don\'t have this permission');
+        }
         $insurance = insurances::findOrFail($request->id);
         $insurance->delete();
         toastr()->success('تم حذف طلب الدفع بنجاح');
@@ -30,12 +42,19 @@ class InsuranceController extends Controller
 
     public function edit($id)
     {
+        if (str_contains(auth('admin')->user()->permissions, "edit_insurance") !== true)
+        {
+            abort('403','You don\'t have this permission');
+        }
         $insurance = insurances::where('id', '=', $id)->first();
         return view('admin.insurances.edit', compact('insurance'));
     }
 
     public function update(Request $request,$id){
-
+        if (str_contains(auth('admin')->user()->permissions, "edit_insurance") !== true)
+        {
+            abort('403','You don\'t have this permission');
+        }
         $insurance = insurances::where('id', '=', $id)->first();
         $validate = Validator::make($request->all(), [
             'status'    => 'required',

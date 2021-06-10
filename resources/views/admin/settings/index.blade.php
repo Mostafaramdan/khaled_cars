@@ -1,7 +1,12 @@
 @extends('layouts.master')
+@section('css')
 
 @section('title')
+
     الاعدادات
+    @stop
+<link href="{{ URL::asset('assets/plugins/bootstrap-tagsinput-latest/dist/bootstrap-tagsinput.css') }}" rel="stylesheet" />
+
 @endsection
 @section('page-header')
     <!-- breadcrumb -->
@@ -39,98 +44,137 @@
                 <div class="card-body">
                     <div class="col-lg-12 margin-tb">
 
-                    </div><br>
-                    {!! Form::model($settings,['route' => ['settings.update' , $settings->id], 'method' => 'put', 'files'=>true]) !!}
-                    <div class="row row-sm">
+                    </div>
+                    <br>
+                    <form action="{{route('settings.update',$settings->id)}}" method="post" enctype="multipart/form-data">
+                        {{csrf_field()}}
+                        @method('put')
+                        <div class="row row-sm">
 
                         <div class="col-lg-12 col-xl-12">
                             <div class="card card-dashboard-map-one">
                                 <div class="" style="width: 100%">
                                 </div>
                                 <div>
-                                    {!! Html::decode(Form::label('policyTerms_ar', 'سياسة الاستخدام بالعربية : <span class="tx-danger">*</span>'))!!}
-                                    {!! Form::textarea('policyTerms_ar', old('policyTerms_ar'),['class'=>'form-control  mg-b-20"
-                                                       data-parsley-class-handler="#lnWrapper' ]) !!}
+                                    <label for="exampleInputEmail1">سياسة الاستخدام بالعربية : <span class="tx-danger">*</span> </label>
+                                    <input type="text" value="{{old('policyTerms_ar',$settings->policyTerms_ar)}}" class="form-control" id="policyTerms_ar" name="policyTerms_ar" required>
                                     @error('policyTerms_ar')<span class="text-danger">{{ $message }}</span>@enderror
                                 </div>
                                 <br>
                                 <div>
-                                    {!! Html::decode(Form::label('policyTerms_en', 'سياسة الاستخدام بالأنجليزية : <span class="tx-danger">*</span>'))!!}
-                                    {!! Form::textarea('policyTerms_en', old('policyTerms_en'),['class'=>'form-control text-left' ]) !!}
+                                    <label for="exampleInputEmail1">سياسة الاستخدام بالانجليزية : <span class="tx-danger">*</span> </label>
+                                    <input type="text" value="{{old('policyTerms_en',$settings->policyTerms_en)}}" class="form-control" id="policyTerms_en" name="policyTerms_en" required>
                                     @error('policyTerms_en')<span class="text-danger">{{ $message }}</span>@enderror
                                 </div>
                                 <br>
-
                                 <div>
-                                    {!! Html::decode(Form::label('aboutUs_ar', 'عن التطبيق بالعربية : <span class="tx-danger">*</span>'))!!}
-                                    {!! Form::textarea('aboutUs_ar', old('aboutUs_ar'),['class'=>'form-control  mg-b-20"
-                                                       data-parsley-class-handler="#lnWrapper' ]) !!}
+                                    <label for="exampleInputEmail1">عن التطبيق بالعربية : <span class="tx-danger">*</span> </label>
+                                    <input type="text" value="{{old('aboutUs_ar',$settings->aboutUs_ar)}}" class="form-control" id="aboutUs_ar" name="aboutUs_ar" required>
                                     @error('aboutUs_ar')<span class="text-danger">{{ $message }}</span>@enderror
                                 </div>
                                 <br>
                                 <div>
-                                    {!! Html::decode(Form::label('aboutUs_en', 'عن التطبيق بالأنجليزية : <span class="tx-danger">*</span>'))!!}
-                                    {!! Form::textarea('aboutUs_en', old('aboutUs_en'),['class'=>'form-control text-left' ]) !!}
+                                    <label for="exampleInputEmail1">عن التطبيق بالعربية : <span class="tx-danger">*</span> </label>
+                                    <input type="text" value="{{old('aboutUs_en',$settings->aboutUs_en)}}" class="form-control" id="aboutUs_en" name="aboutUs_en" required>
                                     @error('aboutUs_en')<span class="text-danger">{{ $message }}</span>@enderror
                                 </div>
                                 <br>
-
                                 <div>
-                                    {!! Html::decode(Form::label('privacy_ar', 'سياسة الأستخدام بالعربية : <span class="tx-danger">*</span>'))!!}
-                                    {!! Form::textarea('privacy_ar', old('privacy_ar'),['class'=>'form-control  mg-b-20"
-                                                       data-parsley-class-handler="#lnWrapper' ]) !!}
+                                    <label for="exampleInputEmail1">سياسة الاستخدام و الاسترجاع بالعربية : <span class="tx-danger">*</span> </label>
+                                    <input type="text" value="{{old('privacy_ar',$settings->privacy_ar)}}" class="form-control" id="privacy_ar" name="privacy_ar" required>
                                     @error('privacy_ar')<span class="text-danger">{{ $message }}</span>@enderror
                                 </div>
                                 <br>
 
                                 <div>
-                                    {!! Html::decode(Form::label('privacy_en', 'سياسة الأستخدام بالأنجليزية : <span class="tx-danger">*</span>'))!!}
-                                    {!! Form::textarea('privacy_en', old('privacy_en'),['class'=>'form-control text-left' ]) !!}
+                                    <label for="exampleInputEmail1">سياسة الاستخدام و الاسترجاع بالانجليزية : <span class="tx-danger">*</span> </label>
+                                    <input type="text" value="{{old('privacy_en',$settings->privacy_en)}}" class="form-control" id="privacy_en" name="privacy_en" required>
                                     @error('privacy_en')<span class="text-danger">{{ $message }}</span>@enderror
                                 </div>
                                 <br>
 
                                 <div>
-                                    {!! Html::decode(Form::label('emails', 'ايميلات الشركة : <span class="tx-danger">*</span>'))!!}
-                                    {!! Form::textarea('emails', old('emails'),['class'=>'form-control text-left' ]) !!}
-                                    @error('emails')<span class="text-danger">{{ $message }}</span>@enderror
-                                </div>
-                                <br>
-
-                                <div>
-                                    {!! Html::decode(Form::label('phones', 'أرقام هواتف الشركة : <span class="tx-danger">*</span>'))!!}
-                                    {!! Form::textarea('phones', old('phones'),['class'=>'form-control text-left' ]) !!}
-                                    @error('phones')<span class="text-danger">{{ $message }}</span>@enderror
-                                </div>
-                                <br>
-
-                                <div>
-                                    {!! Html::decode(Form::label('fees', 'الضرائب : <span class="tx-danger">*</span>'))!!}
-                                    {!! Form::text('fees', old('fees'),['class'=>'form-control  mg-b-20"
-                                                       data-parsley-class-handler="#lnWrapper' ]) !!}
+                                    <label for="exampleInputEmail1">قيمة الضريبة : <span class="tx-danger">*</span> </label>
+                                    <input type="text" value="{{old('fees',$settings->fees)}}" class="form-control" id="fees" name="fees" required>
                                     @error('fees')<span class="text-danger">{{ $message }}</span>@enderror
                                 </div>
                                 <br>
 
                                 <div>
-                                    {!! Html::decode(Form::label('min_days_to_paid', 'عدد أيام فترة السماح للدفع : <span class="tx-danger">*</span>'))!!}
-                                    {!! Form::text('min_days_to_paid', old('min_days_to_paid'),['class'=>'form-control  mg-b-20"
-                                                       data-parsley-class-handler="#lnWrapper' ]) !!}
+                                    <label for="exampleInputEmail1">عدد أيام فترة السماح للدفع : <span class="tx-danger">*</span> </label>
+                                    <input type="text" value="{{old('min_days_to_paid',$settings->min_days_to_paid)}}" class="form-control" id="min_days_to_paid" name="min_days_to_paid" required>
                                     @error('min_days_to_paid')<span class="text-danger">{{ $message }}</span>@enderror
                                 </div>
                                 <br>
+
+                                <div class="form-group">
+                                    <label>ايميلات الشركة : <span class="text-danger">*</span></label>
+                                    <br>
+
+                                    {{ implode('  ,  ',$settings->emails)}}
+
+                                    <br><br>
+                                    <input type="text" id="emails" name="emails" data-role="tagsinput" >
+
+                                    <br>
+                                    @if ($errors->has('emails'))
+                                        <span class="text-danger">{{ $errors->first('emails') }}</span>
+                                    @endif
+                                </div>
+
+                                <div class="form-group">
+                                    <label>تليفونات الشركة : <span class="text-danger">*</span></label>
+                                    <br>
+
+                                    {{ implode('  ,  ',$settings->phones)}}
+
+                                    <br><br>
+                                    <input type="text" id="phones" name="phones" data-role="tagsinput" >
+
+                                    <br>
+                                    @if ($errors->has('phones'))
+                                        <span class="text-danger">{{ $errors->first('phones') }}</span>
+                                    @endif
+                                </div>
+
                             </div>
                         </div>
 
-                        <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                            {!! Form::submit('تعديل', ['class' => 'btn btn-main-primary pd-x-20']) !!}
+                            <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+                                <button type="submit" class="btn btn-primary">تعديل</button>
+                            </div>
                         </div>
-                        {{Form::close()}}
+                    </form>
 
                     </div>
                 </div>
-@endsection
-@section('js')
+                @endsection
+                @section('js')
                     @toastr_js
                     @toastr_render
+                <script>
+                    $("#emails").tagsinput('items').split(',');
+                    $("#phones").tagsinput('items').split(',');
+                </script>
+                    <script src="{{ URL::asset('assets/plugins/bootstrap-tagsinput-latest/dist/bootstrap-tagsinput.js') }}"></script>
+                    <style type="text/css">
+                        .label-info{
+                            background-color: #0c1019;
+
+                        }
+                        .label {
+                            display: inline-block;
+                            padding: .25em .4em;
+                            font-size: 100%;
+                            font-weight: 700;
+                            line-height: 1;
+                            text-align: center;
+                            white-space: nowrap;
+                            vertical-align: baseline;
+                            border-radius: .25rem;
+                            transition: color .15s ease-in-out,background-color .15s ease-in-out,
+                            border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+                        }
+                    </style>
+
 @endsection

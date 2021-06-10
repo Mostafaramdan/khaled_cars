@@ -14,17 +14,34 @@ use Intervention\Image\Facades\Image;
 class UserController extends Controller
 {
     public function index(){
-        $users = users::all();
+        if (str_contains(auth('admin')->user()->permissions, "show_user") !== true)
+        {
+            abort('403','You don\'t have this permission');
+        }
+        $keyword = (isset(\request()->keyword) && \request()->keyword != '') ? \request()->keyword : null;
+        $limit_by = (isset(\request()->limit_by) && \request()->limit_by != '') ? \request()->limit_by : self::$itemPerPage;
+        $users = users::where('id', '!=', null);
+
+        if ($keyword != null) {
+            $users = users::where('name', 'LIKE', "%{$keyword}%")
+                ->orWhere('email', 'LIKE', "%{$keyword}%")
+                ->orWhere('phone', 'LIKE', "%{$keyword}%");
+        }
+        $users = $users->paginate($limit_by);
         return view('admin.users.index',compact('users'));
     }
 
     public function show($id){
-        $user = users::with(['currencies:id,name_ar'])->where('id','=', $id)->first();
+        $user = users::where('id','=', $id)->first();
         return view('admin.users.show',compact('user'));
 
     }
 
     public function destroy(Request $request){
+        if (str_contains(auth('admin')->user()->permissions, "delete_user") !== true)
+        {
+            abort('403','You don\'t have this permission');
+        }
         $user = users::findOrFail($request->id);
         $user->delete();
         toastr()->success('تم حذف المستخدم بنجاح');
@@ -33,12 +50,15 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        if (str_contains(auth('admin')->user()->permissions, "add_user") !== true)
+        {
+            abort('403','You don\'t have this permission');
+        }
         $validate = Validator::make($request->all(), [
             'name'    => 'required',
-            'phone' => 'required|numeric',
+            'phone' => 'required|numeric|unique:users',
             'email' => 'required',
             'password' => 'required',
-            'currencies_id' => 'required|numeric',
             'lang' => 'required|in:ar,en',
             'image'   => 'nullable|mimes:png,jpg,jpeg',
         ]);
@@ -53,8 +73,7 @@ class UserController extends Controller
         $user->phone            = $request->phone;
         $user->email            = $request->email;
         $user->lang             = $request->lang;
-        $user->currencies_id    = $request->currencies_id;
-        $user->password         = Hash::make($request->currencies_id);
+        $user->password         = Hash::make($request->password);
 
         if ($image = $request->file('image')) {
             if ($user->image != '') {
@@ -75,6 +94,10 @@ class UserController extends Controller
 
     public function edit($id)
     {
+        if (str_contains(auth('admin')->user()->permissions, "edit_user") !== true)
+        {
+            abort('403','You don\'t have this permission');
+        }
         $user = users::where('id', '=', $id)->first();
         return view('admin.users.edit', compact('user'));
     }
@@ -97,14 +120,16 @@ class UserController extends Controller
     }
 
     public function update(Request $request,$id){
-
+        if (str_contains(auth('admin')->user()->permissions, "edit_user") !== true)
+        {
+            abort('403','You don\'t have this permission');
+        }
         $user = users::where('id', '=', $id)->first();
         $validate = Validator::make($request->all(), [
             'name'    => 'required',
-            'phone' => 'required|numeric',
+            'phone' => 'required|numeric|between:10000000,999999999999999|unique:users,phone,'. $user->id,
             'email' => 'required',
             'password' => 'nullable',
-            'currencies_id' => 'required|numeric',
             'lang' => 'required|in:ar,en',
             'image'   => 'nullable|mimes:png,jpg,jpeg',
         ]);
@@ -130,10 +155,10 @@ class UserController extends Controller
         $user->phone            = $request->phone;
         $user->email            = $request->email;
         $user->lang             = $request->lang;
-        $user->currencies_id    = $request->currencies_id;
-        $user->password         = Hash::make($request->currencies_id);
+        if($request->password !==null) {
+            $user->password = Hash::make($request->password);
+        }
         $user->update();
-
         toastr()->success('تم تعديل المستخدم بنجاح!');
         return redirect()->route('users.index');
     }

@@ -44,10 +44,12 @@
         <div class="col-xl-12">
             <div class="card">
                 <div class="card-header pb-0">
+                    @if (str_contains(auth('admin')->user()->permissions, "add_brand") !== false)
                     <div class="col-sm-1 col-md-2">
-
                         <a class="btn btn-primary modal-effect" href="#modaldemo8" data-toggle="modal">اضافة علامة تجارية</a>
                     </div>
+                    @endif
+                    @include('admin.brands.filter.filter')
                 </div>
                 <div class="card-body">
                     <div class="table-responsive hoverable-table">
@@ -56,27 +58,43 @@
                             <tr>
                                 <th class="wd-15p border-bottom-0">الأسم بالعربية</th>
                                 <th class="wd-15p border-bottom-0">الأسم بالأنجليزية</th>
+                                @if (str_contains(auth('admin')->user()->permissions, "delete_brand") !== false || str_contains(auth('admin')->user()->permissions, "edit_brand") !== false)
                                 <th class="wd-15p border-bottom-0">العمليات</th>
+                                @endif
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach ($brands as $key => $brand)
+                            @if(isset($brands))
+                            @forelse ($brands as $key => $brand)
                                 <tr>
                                     <td>{{ $brand->name_ar }}</td>
                                     <td>{{ $brand->name_en }}</td>
+                                    @if (str_contains(auth('admin')->user()->permissions, "delete_brand") !== false || str_contains(auth('admin')->user()->permissions, "edit_brand") !== false)
                                     <td>
+                                        @if (str_contains(auth('admin')->user()->permissions, "edit_brand") !== false)
                                         <a href="{{ route('brands.edit', $brand->id) }}" class="btn btn-sm btn-info"
                                            title="تعديل"> <i class="las la-pen"></i> تعديل</a>
+                                        @endif
+                                        @if (str_contains(auth('admin')->user()->permissions, "delete_brand") !== false)
                                         <button class="btn btn-danger btn-sm " data-id="{{ $brand->id }}"
                                                 data-name_ar="{{ $brand->name_ar }}" data-toggle="modal"
                                                 data-target="#modaldemo9"> <i class="las la-trash"></i> حذف</button>
+                                        @endif
                                     </td>
+                                    @endif
                                 </tr>
-                            @endforeach
+                                @empty
+                                    <tr>
+                                        <td colspan="7" class="text-center">لم يتم العثور علي أي نتائج</td>
+                                    </tr>
+
+                                @endforelse
 
 
                             </tbody>
                         </table>
+                        <br><div class="text-center">{!! $brands->links('layouts.pagination') !!}</div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -92,33 +110,37 @@
                         <h6 class="modal-title">اضافة العلامة تجارية</h6><button aria-label="Close" class="close"
                                                                          data-dismiss="modal" type="button"><span aria-hidden="true">&times;</span></button>
                     </div>
-                    {{ Form::open(['route' => 'brands.store', 'class' => 'parsley-style-1', 'method' => 'post']) }}
-                    @csrf
+                    <form action="{{ route('brands.store') }}" class=parsley-style-1' method="post" enctype="multipart/form-data">
+                        @csrf
                     <div class="modal-body">
 
                         <div>
-                            {!! Html::decode(Form::label('name_ar', 'الأسم بالعربية : <span class="tx-danger">*</span>'))!!}
-                            {!! Form::text('name_ar', old('name_ar'),['class'=>'form-control  mg-b-20"
-                                               data-parsley-class-handler="#lnWrapper' ]) !!}
+                            <label for="exampleInputEmail1">الأسم بالعربية : <span class="tx-danger">*</span> </label>
+                            <input type="text" class="form-control" id="name_ar" name="name_ar" required>
                             @error('name_ar')<span class="text-danger">{{ $message }}</span>@enderror
                         </div>
                         <br>
                         <div>
-                            {!! Html::decode(Form::label('name_en', 'الأسم بالأنجليزية : <span class="tx-danger">*</span>'))!!}
-                            {!! Form::text('name_en', old('name_en'),['class'=>'form-control  mg-b-20"
-                                               data-parsley-class-handler="#lnWrapper' ]) !!}
+                            <label for="exampleInputEmail1">الأسم بالأنجليزية : <span class="tx-danger">*</span> </label>
+                            <input type="text" class="form-control" id="name_en" name="name_en" required>
                             @error('name_en')<span class="text-danger">{{ $message }}</span>@enderror
                         </div>
                         <br>
 
-
+                        <div>
+                            <label for="exampleInputEmail1" >الصورة :  </label>
+                            <input type="file" class="form-control form-control"
+                                   data-parsley-class-handler="#lnWrapper" id="image" name="image">
+                            @error('image')<span class="text-danger">{{ $message }}</span>@enderror
+                        </div>
+                        <br>
 
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">الغاء</button>
-                        {!! Form::submit('إضافة', ['class' => 'btn btn-main-primary']) !!}
+                        <button type="submit" class="btn btn-primary">اضافة</button>
                     </div>
-                    {{Form::close()}}
+                   </form>
                 </div>
             </div>
         </div>

@@ -66,19 +66,20 @@
                                     <td>{{ $contact->user->phone }}</td>
                                     <td>{{ $contact->user->email }}</td>
                                     @if($contact->is_open == 1)
-
                                         <td>
-                                            {!! Form::model($contact,['route' => ['contacts.status' , $contact->id], 'method' => 'put']) !!}
-                                            {!! Form::submit('مفتوحة', ['class' => 'btn btn-sm btn-success pd-x-20']) !!}
-                                            {!! Form::close() !!}
-
+                                            <form action="{{route('contacts.status',$contact->id)}}" method="post">
+                                                {{csrf_field()}}
+                                                @method('put')
+                                                <button type="submit" class="btn btn-sm btn-success pd-x-20">مفتوحة</button>
+                                            </form>
                                         </td>
                                     @else
                                         <td>
-                                            {!! Form::model($contact,['route' => ['contacts.status' , $contact->id], 'method' => 'put']) !!}
-                                            {!! Form::submit('مغلقة', ['class' => 'btn btn-sm btn-dark pd-x-20']) !!}
-                                            {!! Form::close() !!}
-
+                                            <form action="{{route('contacts.status',$contact->id)}}" method="post">
+                                                {{csrf_field()}}
+                                                @method('put')
+                                                <button type="submit" class="btn btn-sm btn-dark pd-x-20">مغلقة</button>
+                                            </form>
                                         </td>
                                     @endif
                                     <td>{{ $contact->created_at }}</td>
@@ -88,12 +89,12 @@
                                                 data-target="#modaldemo9"> <i class="las la-eye"></i> عرض</button>
                                     </td>
                                 </tr>
-
                             @endforeach
 
 
                             </tbody>
                         </table>
+                        <br><div class="text-center">{!! $contacts->links('layouts.pagination') !!}</div>
                     </div>
                 </div>
             </div>

@@ -76,7 +76,7 @@
 
                     </div>
                 </div>
-                @elseif(auth('company')->check())
+                @elseif(auth('trader')->check())
                     <div class="dropdown main-profile-menu nav nav-item nav-link">
                         <a class="profile-user d-flex" href=""><img alt=""
                                                                     src="{{ URL::asset('assets/img/faces/6.jpg') }}"></a>
@@ -86,44 +86,21 @@
                                     <div class="main-img-user"><img alt="" src="{{ URL::asset('assets/img/faces/6.jpg') }}"
                                                                     class=""></div>
                                     <div class="mr-3 my-auto">
-                                        <h6>{{auth('company')->user()->name}}</h6><span>{{auth('company')->user()->email}}</span>
+                                        <h6>{{auth('trader')->user()->name}}</h6><span>{{auth('trader')->user()->email}}</span>
                                     </div>
                                 </div>
                             </div>
 
-                            <a class="dropdown-item" href="{{ route('company.logout') }}"
+                            <a class="dropdown-item" href="{{ route('trader.logout') }}"
                                onclick="event.preventDefault();document.getElementById('logout-form').submit();"><i
                                     class="bx bx-log-out"></i>تسجيل خروج</a>
-                            <form id="logout-form" action="{{ route('company.logout') }}" method="POST" style="display: none;">
+                            <form id="logout-form" action="{{ route('trader.logout') }}" method="POST" style="display: none;">
                                 @csrf
                             </form>
 
                         </div>
                     </div>
-                @elseif(auth('bank')->check())
-                    <div class="dropdown main-profile-menu nav nav-item nav-link">
-                        <a class="profile-user d-flex" href=""><img alt=""
-                                                                    src="{{ URL::asset('assets/img/faces/6.jpg') }}"></a>
-                        <div class="dropdown-menu">
-                            <div class="main-header-profile bg-primary p-3">
-                                <div class="d-flex wd-100p">
-                                    <div class="main-img-user"><img alt="" src="{{ URL::asset('assets/img/faces/6.jpg') }}"
-                                                                    class=""></div>
-                                    <div class="mr-3 my-auto">
-                                        <h6>{{auth('bank')->user()->name}}</h6><span>{{auth('bank')->user()->email}}</span>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <a class="dropdown-item" href="{{ route('bank.logout') }}"
-                               onclick="event.preventDefault();document.getElementById('logout-form').submit();"><i
-                                    class="bx bx-log-out"></i>تسجيل خروج</a>
-                            <form id="logout-form" action="{{ route('bank.logout') }}" method="POST" style="display: none;">
-                                @csrf
-                            </form>
-
-                        </div>
-                    </div>
                 @elseif(auth('employee')->check())
                     <div class="dropdown main-profile-menu nav nav-item nav-link">
                         <a class="profile-user d-flex" href=""><img alt=""

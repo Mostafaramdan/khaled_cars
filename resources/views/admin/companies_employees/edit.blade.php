@@ -41,7 +41,9 @@
                             <a class="btn btn-primary" href="{{ route('companies_employees.index') }}">رجوع</a>
                         </div>
                     </div><br>
-                    {!! Form::model($company_employee,['route' => ['companies_employees.update' , $company_employee->id], 'method' => 'put']) !!}
+                    <form action="{{route('companies_employees.update',$company_employee->id)}}" method="post" enctype="multipart/form-data">
+                        {{csrf_field()}}
+                        @method('put')
                     <div class="row row-sm">
 
                         <div class="col-lg-12 col-xl-12">
@@ -49,41 +51,39 @@
                                 <div class="" style="width: 100%">
                                 </div>
                                 <div>
-                                    {!! Html::decode(Form::label('name', 'الأسم : <span class="tx-danger">*</span>'))!!}
-                                    {!! Form::text('name', old('name'),['class'=>'form-control  mg-b-20"
-                                                       data-parsley-class-handler="#lnWrapper' ]) !!}
+                                    <label for="exampleInputEmail1">الأسم : <span class="tx-danger">*</span> </label>
+                                    <input type="text" value="{{old('name',$company_employee->name)}}" class="form-control" id="name" name="name" required>
                                     @error('name')<span class="text-danger">{{ $message }}</span>@enderror
                                 </div>
                                 <br>
                                 <div>
-                                    {!! Html::decode(Form::label('email', 'الإيميل : <span class="tx-danger">*</span>'))!!}
-                                    {!! Form::text('email', old('email'),['class'=>'form-control  mg-b-20"
-                                                       data-parsley-class-handler="#lnWrapper' ]) !!}
+                                    <label for="exampleInputEmail1">البريد الألكتروني : <span class="tx-danger">*</span> </label>
+                                    <input type="email" value="{{old('email',$company_employee->email)}}" class="form-control" id="email" name="email" required>
                                     @error('email')<span class="text-danger">{{ $message }}</span>@enderror
                                 </div>
                                 <br>
                                 <div>
-                                    {!! Html::decode(Form::label('phone', 'التليفون : <span class="tx-danger">*</span>'))!!}
-                                    {!! Form::text('phone', old('phone'),['class'=>'form-control  mg-b-20"
-                                                       data-parsley-class-handler="#lnWrapper' ]) !!}
+                                    <label for="exampleInputEmail1">رقم الهاتف : <span class="tx-danger">*</span> </label>
+                                    <input type="text" value="{{old('phone',$company_employee->phone)}}" class="form-control" id="phone" name="phone" required>
                                     @error('phone')<span class="text-danger">{{ $message }}</span>@enderror
                                 </div>
                                 <br>
                                 <div>
-                                    {!! Html::decode(Form::label('password', 'كلمة المرور : <span class="tx-danger">*</span>'))!!}
-                                    {!! Form::password('password', ['class'=>'form-control  mg-b-20"
-                                                       data-parsley-class-handler="#lnWrapper' ]) !!}
+                                    <label for="exampleInputEmail1">كلمة المرور : <span class="tx-danger">*</span> </label>
+                                    <input type="password" class="form-control" id="password" name="password" >
                                     @error('password')<span class="text-danger">{{ $message }}</span>@enderror
                                 </div>
                                 <br>
 
                                 <div>
-                                    {!! Html::decode(Form::label('companies_employees_id', 'الشركة : <span class="tx-danger">*</span>'))!!}
-                                    {!! Form::select('companies_employees_id', App\Models\companies::pluck('name', 'id'),old('companies_employees_id'),[
-                                        'name'=>'companies_employees_id','class'=>'form-control mg-b-20"
-                                                           data-parsley-class-handler="#lnWrapper' ]) !!}
+                                    <label for="exampleInputEmail1">الشركة : <span class="tx-danger">*</span> </label>
+                                    <select class="form-control"  name="companies_id" id="companies_id">
+                                        <option value="" >--- اختر الشركة ---</option>
+                                        @foreach( $companies as $company)
+                                            <option value="{{$company->id}}" >{{$company->name}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
-                                <br>
 
                             </div>
 
@@ -91,9 +91,10 @@
                         </div>
 
                         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                            {!! Form::submit('تعديل', ['class' => 'btn btn-main-primary pd-x-20']) !!}
+                            <button type="submit" class="btn btn-primary">تعديل</button>
                         </div>
-                        {{Form::close()}}
+                    </div>
+                    </form>
 
                     </div>
                 </div>

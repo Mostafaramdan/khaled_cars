@@ -68,15 +68,9 @@
                             <tr>
                                 <th>الحالة</th>
                                 <td>{{ $user->is_active == 1 ? 'مفعل' : 'غير مفعل'}} </td>
-                                <th> العملة</th>
-                                <td>{{ @$user->currencies->name_ar !== null ? $user->currencies->name_ar : 'غير متوفر' }} </td>
-                            </tr>
-                            <tr>
                                 <th>تاريخ الانشاء</th>
                                 <td>{{ $user->created_at}} </td>
                             </tr>
-
-
                             </tbody>
                         </table>
                     </div>

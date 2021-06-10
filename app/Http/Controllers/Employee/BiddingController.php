@@ -9,17 +9,10 @@ class BiddingController extends Controller
 {
     public function index(){
 
-        if(auth('employee')->user()->companies_id !== null){
-            $c_biddings = biddings::with(['companies'])
-                ->where('companies_id','=',auth('employee')->user()->companies_id)
-                ->get();
-            return view('employee.c_biddings.index',compact('c_biddings'));
-        }
-        elseif(auth('employee')->user()->banks_id !== null){
-            $c_biddings = biddings::with(['companies'])
-                ->where('banks_id','=',auth('employee')->user()->banks_id)
-                ->get();
-
+        if(auth('employee')->user()->traders_id !== null){
+            $c_biddings = biddings::with(['trader'])
+                ->where('traders_id','=',auth('employee')->user()->traders_id)
+                ->paginate(self::$itemPerPage);
             return view('employee.c_biddings.index',compact('c_biddings'));
         }
         else{

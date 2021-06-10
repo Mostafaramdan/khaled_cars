@@ -55,8 +55,7 @@ Route::ANY('/getMyFavorites',[index::class, 'index']);
 Route::ANY('/getMyBids',[index::class, 'index']);
 Route::ANY('/getModels',[index::class, 'index']);
 Route::ANY('/getModelYears',[index::class, 'index']);
-
-Route::ANY('getInsurancesSlides',[index::class, 'index']);
 Route::ANY('getInsurancesSlides',[index::class, 'index']);
 Route::ANY('getTraders',[index::class, 'index']);
 Route::ANY('getBidsByATrader',[index::class, 'index']);
+Route::ANY('testSocket',[index::class, 'index']);

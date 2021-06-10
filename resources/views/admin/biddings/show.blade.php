@@ -8,8 +8,8 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex">
-                <h4 class="content-title mb-0 my-auto">المزادات</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ عرض
-                المزاد ( {{ $bidding->products->name_ar }} )</span>
+                <h4 class="content-title mb-0 my-auto"> المزادات </h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ عرض
+                المزاد ( {{ $bidding->product->name_ar }} )</span>
             </div>
         </div>
     </div>
@@ -45,14 +45,37 @@
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                             <tbody>
                             <tr>
-                                <th>اسم المنتج</th>
-                                <td>{{ $bidding->products->name_ar }} </td>
-                                <th>قسم المنتج</th>
-                                <td>{{ $bidding->products->categories->name_ar }}</td>
+                                <th>اسم المنتج بالعربية</th>
+                                <td>{{ $bidding->product->name_ar }} </td>
+                                <th>اسم المنتج بالأنجليزية</th>
+                                <td>{{ $bidding->product->name_en}} </td>
                             </tr>
                             <tr>
+                                <th>موديل المنتج</th>
+                                <td>{{ $bidding->product->model->model }} </td>
+                                <th>سنة الصنع</th>
+                                <td>{{ $bidding->product->model_year->model_year}} </td>
+                            </tr>
+                            <tr>
+                                <th>سعر المنتج</th>
+                                <td>{{ $bidding->product->price }} </td>
+                                <th>نوع المنتج</th>
+                                @if($bidding->product->status == 'new')
+                                <td> جديد </td>
+                                @elseif($bidding->product->status == 'antique')
+                                    <td> عتيق </td>
+                                @elseif($bidding->product->status == 'rare')
+                                    <td> نادر </td>
+                                @elseif($bidding->product->status == 'slight_damage')
+                                    <td> ضرر طفيف </td>
+                                @elseif($bidding->product->status == 'damage')
+                                    <td> محطم </td>
+                                @endif
+                            </tr>
+                            <br>
+                            <tr>
                                 <th>العلامة التجارية للمنتج</th>
-                                <td>{{ $bidding->products->brands->name_ar }}</td>
+                                <td>{{ $bidding->product->brand->name_ar }}</td>
                                 <th>مبلغ تأمين المزاد</th>
                                 <td>{{ $bidding->Insurance}} </td>
                             </tr>
@@ -63,10 +86,14 @@
                                 <td>{{ $bidding->type == 'open' ? 'مفتوح' : 'مغلق' }} </td>
                             </tr>
                             <tr>
-                                <th>البنك</th>
-                                <td>{{ @$bidding->banks->name == null ? 'غير معين لبنك' : $bidding->banks->name}} </td>
-                                <th>الشركة</th>
-                                <td>{{ @$bidding->companies->name == null ? 'غير معين لشركة' : $bidding->companies->name}} </td>
+                                <th>تاريخ انتهاء المزاد</th>
+                                <td>{{ $bidding->end_at}} </td>
+                                <th>التاجر</th>
+                                @if($bidding->trader->type == 'company')
+                                    <td>  <span style="color: limegreen">( شركة )</span>  {{ $bidding->trader->name}}</td>
+                                @elseif($bidding->trader->type == 'bank')
+                                    <td>  <span style="color: #dc2a2a">( بنك )</span>  {{ $bidding->trader->name }}</td>
+                                @endif
                             </tr>
 
 

@@ -44,10 +44,12 @@
         <div class="col-xl-12">
             <div class="card">
                 <div class="card-header pb-0">
+                    @if (str_contains(auth('admin')->user()->permissions, "add") !== false)
                     <div class="col-sm-1 col-md-2">
-
                         <a class="btn btn-primary modal-effect" href="#modaldemo8" data-toggle="modal">اضافة موظف لبنك</a>
                     </div>
+                    @endif
+                    @include('admin.banks_employees.filter.filter')
                 </div>
                 <div class="card-body">
                     <div class="table-responsive hoverable-table">
@@ -58,30 +60,43 @@
                                 <th class="wd-15p border-bottom-0">الإيميل</th>
                                 <th class="wd-15p border-bottom-0">رقم الهاتف</th>
                                 <th class="wd-15p border-bottom-0">اسم البنك</th>
+                                @if (str_contains(auth('admin')->user()->permissions, "delete") !== false || str_contains(auth('admin')->user()->permissions, "edit") !== false)
                                 <th class="wd-15p border-bottom-0">العمليات</th>
+                                @endif
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach ($banks_employees as $key => $banks_employee)
+                            @if(isset($banks_employees))
+                            @forelse ($banks_employees as $key => $banks_employee)
                                 <tr>
                                     <td>{{ $banks_employee->name }}</td>
                                     <td>{{ $banks_employee->email }}</td>
                                     <td>{{ $banks_employee->phone }}</td>
-                                    <td>{{ $banks_employee->banks->name }}</td>
-
+                                    <td>{{ $banks_employee->bank->name }}</td>
+                                    @if (str_contains(auth('admin')->user()->permissions, "delete") !== false || str_contains(auth('admin')->user()->permissions, "edit") !== false)
                                     <td>
+                                        @if (str_contains(auth('admin')->user()->permissions, "edit") !== false)
                                         <a href="{{ route('banks_employees.edit', $banks_employee->id) }}" class="btn btn-sm btn-info"
                                            title="تعديل"> <i class="las la-pen"></i> تعديل</a>
+                                        @endif
+                                        @if (str_contains(auth('admin')->user()->permissions, "delete") !== false)
                                         <button class="btn btn-danger btn-sm " data-id="{{ $banks_employee->id }}"
                                                 data-name_ar="{{ $banks_employee->name }}" data-toggle="modal"
                                                 data-target="#modaldemo9"> <i class="las la-trash"></i> حذف</button>
+                                        @endif
                                     </td>
+                                    @endif
                                 </tr>
-                            @endforeach
+                            @empty
+                                <tr>
+                                    <td colspan="7" class="text-center">لم يتم العثور علي أي نتائج</td>
+                                </tr>
 
-
+                            @endforelse
                             </tbody>
                         </table>
+                        <br><div class="text-center">{!! $banks_employees->links('layouts.pagination') !!}</div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -97,54 +112,49 @@
                         <h6 class="modal-title">اضافة الموظف لبنك</h6><button aria-label="Close" class="close"
                                                                          data-dismiss="modal" type="button"><span aria-hidden="true">&times;</span></button>
                     </div>
-                    {{ Form::open(['route' => 'banks_employees.store', 'class' => 'parsley-style-1', 'method' => 'post']) }}
-                    @csrf
-                    <div class="modal-body">
+                    <form action="{{ route('banks_employees.store') }}" class=parsley-style-1' method="post" enctype="multipart/form-data">
+                        @csrf
+                        <div class="modal-body">
+                            <div>
+                                <label for="exampleInputEmail1">الأسم : <span class="tx-danger">*</span> </label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                                @error('name')<span class="text-danger">{{ $message }}</span>@enderror
+                            </div>
+                            <br>
+                            <div>
+                                <label for="exampleInputEmail1">البريد الألكتروني : <span class="tx-danger">*</span> </label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                                @error('email')<span class="text-danger">{{ $message }}</span>@enderror
+                            </div>
+                            <br>
+                            <div>
+                                <label for="exampleInputEmail1">رقم الهاتف : <span class="tx-danger">*</span> </label>
+                                <input type="text" class="form-control" id="phone" name="phone" required>
+                                @error('phone')<span class="text-danger">{{ $message }}</span>@enderror
+                            </div>
+                            <br>
+                            <div>
+                                <label for="exampleInputEmail1">كلمة المرور : <span class="tx-danger">*</span> </label>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                                @error('password')<span class="text-danger">{{ $message }}</span>@enderror
+                            </div>
+                            <br>
+                            <div>
+                                <label for="exampleInputEmail1">البنك : <span class="tx-danger">*</span> </label>
+                                <select class="form-control"  name="banks_id" id="banks_id">
+                                    <option value="" >--- اختر البنك ---</option>
+                                    @foreach( $banks as $bank)
+                                        <option value="{{$bank->id}}" >{{$bank->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
 
-                        <div>
-                            {!! Html::decode(Form::label('name', 'الأسم : <span class="tx-danger">*</span>'))!!}
-                            {!! Form::text('name', old('name'),['class'=>'form-control  mg-b-20"
-                                               data-parsley-class-handler="#lnWrapper' ]) !!}
-                            @error('name')<span class="text-danger">{{ $message }}</span>@enderror
                         </div>
-                        <br>
-                        <div>
-                            {!! Html::decode(Form::label('email', 'الإيميل : <span class="tx-danger">*</span>'))!!}
-                            {!! Form::text('email', old('email'),['class'=>'form-control  mg-b-20"
-                                               data-parsley-class-handler="#lnWrapper' ]) !!}
-                            @error('email')<span class="text-danger">{{ $message }}</span>@enderror
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">الغاء</button>
+                            <button type="submit" class="btn btn-primary">اضافة</button>
                         </div>
-                        <br>
-                        <div>
-                            {!! Html::decode(Form::label('phone', 'التليفون : <span class="tx-danger">*</span>'))!!}
-                            {!! Form::text('phone', old('phone'),['class'=>'form-control  mg-b-20"
-                                               data-parsley-class-handler="#lnWrapper' ]) !!}
-                            @error('phone')<span class="text-danger">{{ $message }}</span>@enderror
-                        </div>
-                        <br>
-                        <div>
-                            {!! Html::decode(Form::label('password', 'كلمة المرور : <span class="tx-danger">*</span>'))!!}
-                            {!! Form::password('password', ['class'=>'form-control  mg-b-20"
-                                               data-parsley-class-handler="#lnWrapper' ]) !!}
-                            @error('password')<span class="text-danger">{{ $message }}</span>@enderror
-                        </div>
-                        <br>
-
-                        <div>
-                            {!! Html::decode(Form::label('banks_id', 'البنك : <span class="tx-danger">*</span>'))!!}
-                            {!! Form::select('banks_id', App\Models\banks::pluck('name', 'id'),old('banks_id'),[
-                                'name'=>'banks_id','placeholder'=>'--- اختر البنك ---','class'=>'form-control mg-b-20"
-                                                   data-parsley-class-handler="#lnWrapper' ]) !!}
-                        </div>
-                        <br>
-
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">الغاء</button>
-                        {!! Form::submit('إضافة', ['class' => 'btn btn-main-primary']) !!}
-                    </div>
-                    {{Form::close()}}
+                    </form>
                 </div>
             </div>
         </div>

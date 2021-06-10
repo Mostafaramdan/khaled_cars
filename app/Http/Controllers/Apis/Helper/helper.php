@@ -157,11 +157,6 @@ class helper extends generalHelp
 		$file_contents = self::get_web_page($request)['content'];
 		$json_decode = json_decode($file_contents,true);
 		$cityName = isset($json_decode['results'][0]["address_components"][3]["long_name"])? $json_decode['results'][0]["address_components"][3]["long_name"] : $json_decode['results'][1]["formatted_address"];
-// 		$regions = regions::where('regions_id','!=',null)->get()->filter(function($item) use ($cityName) {
-// 			if( stripos($item['name_ar'],$cityName) !== false || stripos($item['name_en'],$cityName) !== false)
-// 				return true;
-// 			return false;
-// 		});
 		$regions = regions::where('regions_id','!=',null)
                           ->where('name_en', 'like', '%' . $cityName . '%')
 		                  ->get();

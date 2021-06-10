@@ -6,6 +6,37 @@
 @section('content')
     <!-- row -->
     <br><br>
+    <!-- row opened -->
+    <div class="row row-sm">
+        <div class="col-lg-12 col-xl-6">
+            <div class="card">
+                <div class="card-header bg-transparent pd-b-0 pd-t-20 bd-b-0">
+                    <div class="d-flex justify-content-between">
+                        <h4 class="card-title mb-0">احصائيات المزادات علي مدار ٦ أشهر</h4>
+                        <i class="mdi mdi-dots-horizontal text-gray"></i>
+                    </div>
+
+                </div>
+                <div class="card-body" style="width: 100%">
+                    {!! $chartjs->render() !!}
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-lg-12 col-xl-6">
+            <div class="card card-dashboard-map-one">
+                <label class="main-content-label">احصائيات مزادات الشركات و البنوك</label>
+                <div class="" style="width: 100%">
+                    {!! $chartjs_2->render() !!}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- row closed -->
+
+    <br><br>
     <div class="row row--lg">
         <div class="col-xl-4 col-lg-6 col-lg-6 col-xm-12">
             <div class="card overflow-hidden sales-card bg-secondary">
@@ -38,7 +69,7 @@
                         <div class="d-flex">
                             <div class="">
                                 <h3 class="tx-30 font-weight-bold mb-1 text-white justify-content-center">
-                                    {{ \App\Models\companies::count() }}
+                                    {{ \App\Models\traders::where('type','=','company')->count() }}
                                 </h3>
                                 <p class="mb-0 tx-12 text-white op-7"></p>
                             </div>
@@ -59,7 +90,7 @@
                         <div class="d-flex">
                             <div class="">
                                 <h3 class="tx-30 font-weight-bold mb-1 text-white justify-content-center">
-                                    {{ \App\Models\banks::count() }}
+                                    {{ \App\Models\traders::where('type','=','bank')->count() }}
                                 </h3>
                                 <p class="mb-0 tx-12 text-white op-7"></p>
                             </div>
@@ -161,28 +192,6 @@
         </div>
 
         <div class="col-xl-4 col-lg-6 col-md-6 col-xm-12">
-            <div class="card overflow-hidden sales-card bg-secondary-gradient">
-                <div class="pl-3 pt-3 pr-3 pb-2 pt-0">
-                    <div class="">
-                        <h6 class="mb-3 tx-20 text-white">عدد الأقسام</h6>
-                    </div>
-                    <div class="pb-0 mt-0">
-                        <div class="d-flex">
-                            <div class="">
-                                <h3 class="tx-30 font-weight-bold mb-1 text-white">
-                                    {{ \App\Models\categories::count() }}
-                                </h3>
-                                <p class="mb-0 tx-12 text-white op-7">
-
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-4 col-lg-6 col-md-6 col-xm-12">
             <div class="card overflow-hidden sales-card bg-success">
                 <div class="pl-3 pt-3 pr-3 pb-2 pt-0">
                     <div class="">
@@ -204,7 +213,7 @@
             </div>
         </div>
 
-        <div class="col-xl-4 col-lg-6 col-md-6 col-xm-12">
+<!--        <div class="col-xl-4 col-lg-6 col-md-6 col-xm-12">
             <div class="card overflow-hidden sales-card bg-dark">
                 <div class="pl-3 pt-3 pr-3 pb-2 pt-0">
                     <div class="">
@@ -214,7 +223,7 @@
                         <div class="d-flex">
                             <div class="">
                                 <h3 class="tx-30 font-weight-bold mb-1 text-white">
-                                    {{ \App\Models\products::count()}}
+                                    {{--{{ \App\Models\products::count()}}--}}
                                 </h3>
                                 <p class="mb-0 tx-12 text-white op-7">
 
@@ -224,7 +233,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
 
         <div class="col-xl-4 col-lg-6 col-md-6 col-xm-12">
             <div class="card overflow-hidden sales-card bg-danger">
@@ -248,4 +257,6 @@
         </div>
     </div>
     <!-- row closed -->
+
+
 @endsection

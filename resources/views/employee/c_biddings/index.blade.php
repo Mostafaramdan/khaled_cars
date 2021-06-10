@@ -60,7 +60,7 @@
                             <tbody>
                             @foreach ($c_biddings as $key => $c_bidding)
                                 <tr>
-                                    <td>{{ $c_bidding->products->name_ar }}</td>
+                                    <td>{{ $c_bidding->product->name_ar }}</td>
                                     <td>{{ $c_bidding->Insurance }}</td>
                                     <td>{{ $c_bidding->min_auction }}</td>
                                     @if($c_bidding->type == 'open')
@@ -76,8 +76,8 @@
                                     @endif
                                     <td>
                                         <button class="btn btn-warning btn-sm " data-id="{{ $c_bidding->id }}"
-                                                data-name_ar="{{ $c_bidding->products->name_ar }}"
-                                                data-brand_name="{{ $c_bidding->products->brands->name_ar }}"
+                                                data-name_ar="{{ $c_bidding->product->name_ar }}"
+                                                data-brand_name="{{ $c_bidding->product->brand->name_ar }}"
                                                 data-Insurance="{{ $c_bidding->Insurance }}"
                                                 data-min_auction="{{ $c_bidding->min_auction }}"
                                                 data-toggle="modal"
@@ -90,6 +90,7 @@
 
                             </tbody>
                         </table>
+                        <br><div class="text-center">{!! $c_biddings->links('layouts.pagination') !!}</div>
                     </div>
                 </div>
             </div>
@@ -112,13 +113,11 @@
                                 <br>
                                 <input type="hidden" name="user_id" id="user_id" value="">
                                 <input type="hidden" name="id" id="id" value="">
-                                {!! Html::decode(Form::label('policyTerms_ar', 'اسم المنتج : '))!!}
+                                <label for="exampleInputEmail1">اسم المنتج :  </label>
                                 <textarea class="form-control textarea" name="name_ar" id="name_ar" type="text" readonly></textarea><br>
-                                {!! Html::decode(Form::label('policyTerms_ar', 'قسم المنتج : '))!!}
-                                <textarea class="form-control textarea" name="cat_name" id="cat_name" type="text" readonly></textarea><br>
-                                {!! Html::decode(Form::label('policyTerms_ar', 'العلامة التجارية للمنتج : '))!!}
+                                <label for="exampleInputEmail1">العلامة التجارية للمنتج :  </label>
                                 <textarea class="form-control textarea" name="brand_name" id="brand_name" type="text" readonly></textarea><br>
-                                {!! Html::decode(Form::label('policyTerms_ar', 'الحد الأدني للمزاد : '))!!}
+                                <label for="exampleInputEmail1">الحد الأدني للمزاد :  </label>
                                 <textarea class="form-control textarea" name="min_auction" id="min_auction" type="text" readonly></textarea><br>
                             </div>
                             <div class="modal-footer">

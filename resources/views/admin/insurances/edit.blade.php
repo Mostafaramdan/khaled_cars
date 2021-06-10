@@ -41,27 +41,31 @@
                             <a class="btn btn-primary" href="{{ route('insurances.index') }}">رجوع</a>
                         </div>
                     </div><br>
-                    {!! Form::model($insurance,['route' => ['insurances.update' , $insurance->id], 'method' => 'put']) !!}
+                    <form action="{{route('insurances.update',$insurance->id)}}" method="post" enctype="multipart/form-data">
+                        {{csrf_field()}}
+                        @method('put')
                     <div class="row row-sm">
 
                         <div class="col-lg-12 col-xl-12">
                             <div class="card card-dashboard-map-one">
                                 <div class="" style="width: 100%">
                                 </div>
-
-                                <div>
-                                    {!! Html::decode(Form::label('status', 'الحالة : <span class="tx-danger">*</span>'))!!}
-                                    {!! Form::select('status',  array("waiting"=>"بانتظار التأكيد","accept" => "مقبولة","refused"=> "مرفوضة","cancelled"=>"ملغية"),old('status'), array( 'class' => 'form-control  nice-select  custom-select', 'tabindex' => '2',)) !!}
-                                    @error('status')<span class="text-danger">{{ $message }}</span>@enderror
-                                </div>
+                                <label for="exampleInputEmail1">الحالة : <span class="tx-danger">*</span> </label>
+                                <select class="form-control"  name="status" id="status">
+                                    <option value="waiting"   @if (old('status', $insurance->status == 'waiting'))    SELECTED @endif>بانتظار التأكيد</option>
+                                    <option value="accept"    @if (old('status', $insurance->status == 'accept'))  SELECTED @endif >مقبولة</option>
+                                    <option value="refused"   @if (old('status', $insurance->status == 'refused'))  SELECTED @endif >مرفوضة</option>
+                                    <option value="cancelled" @if (old('status', $insurance->status == 'cancelled')) SELECTED @endif >ملغية</option>
+                                </select>
                                 <br>
                             </div>
                         </div>
 
                         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                            {!! Form::submit('تعديل', ['class' => 'btn btn-main-primary pd-x-20']) !!}
+                            <button type="submit" class="btn btn-primary">تعديل</button>
                         </div>
-                        {{Form::close()}}
+                    </div>
+                    </form>
 
                     </div>
                 </div>
