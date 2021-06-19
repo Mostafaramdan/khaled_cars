@@ -11,10 +11,10 @@ return
                 'validation'=>'required',
             ],
             [
-                'name'=>'type',
-                'dataType'=>'string',
+                'name'=>'brandId',
+                'dataType'=>'int',
                 'validation'=>'optional',
-                'description'=>"open , win , lose"
+                'description'=>"get it from <a href='#getBrands'>getBrands</a>"
             ],
             [
                 'name'=>'page',

@@ -9,4 +9,8 @@ class models extends Model
 {
     use HasFactory;
     protected $table = 'models';
+    public $timestamps = false;
+    public function brand(){
+        return $this->belongsTo(brands::class,'brands_id');
+    }
 }

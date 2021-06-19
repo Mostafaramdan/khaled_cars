@@ -44,6 +44,7 @@
         <div class="col-xl-12">
             <div class="card">
                 <div class="card-header pb-0">
+                    @if(auth('admin')->check())
                     @if (str_contains(auth('admin')->user()->permissions, "add_bidding") !== false)
                         <div class="row">
                             <div class="col-sm-1 col-md-2">
@@ -60,7 +61,15 @@
                             </div>
                         </div>
                     @endif
+                    @endif
+                    @if(auth('trader')->check())
+                            <div class="col-sm-1 col-md-2">
+                                <a class="btn btn-primary modal-effect" href="#modaldemo12" data-toggle="modal">اضافة مزاد</a>
+                            </div>
+                    @endif
+                    @if(auth('employee')->check() !== true)
                     @include('admin.biddings.filter.filter')
+                    @endif
                 </div>
                 <div class="card-body">
                     <div class="table-responsive hoverable-table">
@@ -68,9 +77,11 @@
                             <thead>
                             <tr>
                                 <th class="wd-10p border-bottom-0">اسم المنتج</th>
-                                <th class="wd-10p border-bottom-0">مبلغ التأمين</th>
+<!--                                <th class="wd-10p border-bottom-0">مبلغ التأمين</th>-->
                                 <th class="wd-15p border-bottom-0">الحد الأدني للمزاد</th>
+                                @if(auth('admin')->check())
                                 <th class="wd-15p border-bottom-0">التاجر</th>
+                                @endif
                                 <th class="wd-10p border-bottom-0">النوع</th>
                                 <th class="wd-10p border-bottom-0">التاريخ</th>
                                 <th class="wd-20p border-bottom-0">العمليات</th>
@@ -81,12 +92,14 @@
                             @forelse($biddings as $key => $bidding)
                                 <tr>
                                     <td>{{ $bidding->product->name_ar }}</td>
-                                    <td>{{ $bidding->Insurance }}</td>
+<!--                                    <td>{{ $bidding->Insurance }}</td>-->
                                     <td>{{ $bidding->min_auction }}</td>
+                                    @if(auth('admin')->check())
                                     @if($bidding->trader->type == 'company')
                                         <td>  <span style="color: limegreen">( شركة )</span>  {{ $bidding->trader->name}}</td>
                                     @elseif($bidding->trader->type == 'bank')
                                         <td>  <span style="color: #dc2a2a">( بنك )</span>  {{ $bidding->trader->name }}</td>
+                                    @endif
                                     @endif
                                     @if($bidding->type == 'open')
                                             <td>
@@ -110,6 +123,7 @@
                                     <td>
                                         <a href="{{ route('biddings.show', $bidding->id) }}" class="btn btn-sm btn-warning"
                                            title="عرض"> <i class="las la-eye"></i> عرض </a>
+                                        @if(auth('admin')->check())
                                         @if (str_contains(auth('admin')->user()->permissions, "edit_bidding") !== false)
                                         <a href="{{ route('biddings.edit', $bidding->id) }}" class="btn btn-sm btn-info"
                                            title="تعديل"> <i class="las la-pen"></i> تعديل</a>
@@ -119,6 +133,14 @@
                                                 data-name_ar="{{ $bidding->product->name_ar }}" data-toggle="modal"
                                                 data-target="#modaldemo9"> <i class="las la-trash"></i> حذف</button>
                                         @endif
+                                            @endif
+                                        @if(auth('trader')->check())
+                                            <a href="{{ route('biddings.edit', $bidding->id) }}" class="btn btn-sm btn-info"
+                                               title="تعديل"> <i class="las la-pen"></i> تعديل</a>
+                                            <button class="btn btn-danger btn-sm " data-id="{{ $bidding->id }}"
+                                                    data-name_ar="{{ $bidding->product->name_ar }}" data-toggle="modal"
+                                                    data-target="#modaldemo9"> <i class="las la-trash"></i> حذف</button>
+                                            @endif
                                     </td>
                                 </tr>
                                 @empty
@@ -135,9 +157,8 @@
             </div>
         </div>
         <!--/div-->
-
+        @if(auth('admin')->check())
         <!-- Modal effects -->
-
         <div class="modal" id="modaldemo8">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content modal-content-demo">
@@ -177,38 +198,27 @@
                                 <option value="damage" >محطم</option>
                             </select>
                         </div>
-
+                        <br>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">المميزات : <span class="tx-danger">*</span> </label>
+                                    <select class="form-control select-multiple-tags" name="features[]" id="features[]" multiple>
+                                        @foreach( $features as $feature)
+                                            <option value="{{$feature->id}}" >{{$feature->name_ar}}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('features')<span class="text-danger">{{ $message }}</span>@enderror
+                                </div>
+                            </div>
+                        </div>
+                        <br>
                         <div>
                             <label for="exampleInputEmail1">السعر : <span class="tx-danger">*</span> </label>
                             <input type="text" class="form-control" id="price" name="price" required>
                             @error('price')<span class="text-danger">{{ $message }}</span>@enderror
                         </div>
                         <br>
-
-                        <div>
-                            <label for="exampleInputEmail1">الموديل : <span class="tx-danger">*</span> </label>
-                            <select class="form-control"  name="models_id" id="models_id">
-                                <option value="" >--- اختر الموديل ---</option>
-                                @foreach( $models as $model)
-                                    <option value="{{$model->id}}" >{{$model->model}}</option>
-                                @endforeach
-                            </select>
-                            @error('model')<span class="text-danger">{{ $message }}</span>@enderror
-                        </div>
-                        <br>
-
-                        <div>
-                            <label for="exampleInputEmail1">سنة الصنع : <span class="tx-danger">*</span> </label>
-                            <select class="form-control"  name="model_years_id" id="model_years_id">
-                                <option value="" >--- اختر سنة الصنع ---</option>
-                                @foreach( $model_years as $model_year)
-                                    <option value="{{$model_year->id}}" >{{$model_year->model_year}}</option>
-                                @endforeach
-                            </select>
-                            @error('model_year')<span class="text-danger">{{ $message }}</span>@enderror
-                        </div>
-                        <br>
-
                         <div>
                             <label for="exampleInputEmail1">الوصف بالعربية : <span class="tx-danger">*</span> </label>
                             <textarea type="text" class="form-control" id="description_ar" name="description_ar" required></textarea>
@@ -225,7 +235,7 @@
 
                         <div>
                             <label for="exampleInputEmail1">العلامة التجارية : <span class="tx-danger">*</span> </label>
-                            <select class="form-control"  name="brands_id" id="brands_id">
+                            <select class="form-control brands_id"  name="brands_id" id="brands_id">
                                 <option value="" >--- اختر العلامة التجارية ---</option>
                                 @foreach( $brands as $brand)
                                     <option value="{{$brand->id}}" >{{$brand->name_ar}}</option>
@@ -233,10 +243,35 @@
                             </select>
                         </div>
                         <br>
+                        <div>
+                            <label for="exampleInputEmail1">الموديل : <span class="tx-danger">*</span> </label>
+                            <select class="form-control models_id"  name="models_id" id="models_id">
+                                <option value="" >--- اختر الموديل ---</option>
+                            </select>
+                            @error('models_id')<span class="text-danger">{{ $message }}</span>@enderror
+                        </div>
+                        <br>
 
+                        <div>
+                            <label for="exampleInputEmail1">سنة الصنع : <span class="tx-danger">*</span> </label>
+                            <select class="form-control model_years_id"  name="model_years_id" id="model_years_id">
+                                <option value="" >--- اختر سنة الصنع ---</option>
+                            </select>
+                            @error('model_year')<span class="text-danger">{{ $message }}</span>@enderror
+                        </div>
+                        <br>
+
+                        <div>
+                            <label for="exampleInputEmail1" >الصور :  </label>
+                            <input type="file" class="form-control form-control"
+                                   data-parsley-class-handler="#lnWrapper" id="images[]" name="images[]" multiple>
+                            @error('images')<span class="text-danger">{{ $message }}</span>@enderror
+                        </div>
+                        <br>
                         <hr>
 
-                        <label for="exampleInputEmail1"><h4><strong>بيانات المزاد</strong></h4></label>                        <br>
+                        <label for="exampleInputEmail1"><h4><strong>بيانات المزاد</strong></h4></label>
+                        <br>
 
                         <div>
                             <label for="exampleInputEmail1">الحد الأدني للمزاد : <span class="tx-danger">*</span> </label>
@@ -245,12 +280,12 @@
                         </div>
                         <br>
 
-                        <div>
+<!--                        <div>
                             <label for="exampleInputEmail1">مبلغ التأمين : <span class="tx-danger">*</span> </label>
                             <input type="text" class="form-control" id="Insurance" name="Insurance" required>
                             @error('Insurance')<span class="text-danger">{{ $message }}</span>@enderror
                         </div>
-                        <br>
+                        <br>-->
 
                         <div>
                             <label for="exampleInputEmail1">نوع المزاد : <span class="tx-danger">*</span> </label>
@@ -288,9 +323,7 @@
                 </div>
             </div>
         </div>
-
         <!-- Modal effects -->
-
         <div class="modal" id="modaldemo11">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content modal-content-demo">
@@ -330,35 +363,25 @@
                                     <option value="damage" >محطم</option>
                                 </select>
                             </div>
-
+                            <br>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">المميزات : <span class="tx-danger">*</span> </label>
+                                        <select class="form-control select-multiple-tags" name="features[]" id="features[]" multiple>
+                                            @foreach( $features as $feature)
+                                                <option value="{{$feature->id}}" >{{$feature->name_ar}}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('features')<span class="text-danger">{{ $message }}</span>@enderror
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
                             <div>
                                 <label for="exampleInputEmail1">السعر : <span class="tx-danger">*</span> </label>
                                 <input type="text" class="form-control" id="price" name="price" required>
                                 @error('price')<span class="text-danger">{{ $message }}</span>@enderror
-                            </div>
-                            <br>
-
-                            <div>
-                                <label for="exampleInputEmail1">الموديل : <span class="tx-danger">*</span> </label>
-                                <select class="form-control"  name="models_id" id="models_id">
-                                    <option value="" >--- اختر الموديل ---</option>
-                                    @foreach( $models as $model)
-                                        <option value="{{$model->id}}" >{{$model->model}}</option>
-                                    @endforeach
-                                </select>
-                                @error('model')<span class="text-danger">{{ $message }}</span>@enderror
-                            </div>
-                            <br>
-
-                            <div>
-                                <label for="exampleInputEmail1">سنة الصنع : <span class="tx-danger">*</span> </label>
-                                <select class="form-control"  name="model_years_id" id="model_years_id">
-                                    <option value="" >--- اختر سنة الصنع ---</option>
-                                    @foreach( $model_years as $model_year)
-                                        <option value="{{$model_year->id}}" >{{$model_year->model_year}}</option>
-                                    @endforeach
-                                </select>
-                                @error('model_year')<span class="text-danger">{{ $message }}</span>@enderror
                             </div>
                             <br>
 
@@ -378,12 +401,38 @@
 
                             <div>
                                 <label for="exampleInputEmail1">العلامة التجارية : <span class="tx-danger">*</span> </label>
-                                <select class="form-control"  name="brands_id" id="brands_id">
+                                <select class="form-control brands_id"  name="brands_id" id="brands_id">
                                     <option value="" >--- اختر العلامة التجارية ---</option>
                                     @foreach( $brands as $brand)
                                         <option value="{{$brand->id}}" >{{$brand->name_ar}}</option>
                                     @endforeach
                                 </select>
+                            </div>
+                            <br>
+
+                            <div>
+                                <label for="exampleInputEmail1">الموديل : <span class="tx-danger">*</span> </label>
+                                <select class="form-control models_id"  name="models_id" id="models_id">
+                                    <option value="" >--- اختر الموديل ---</option>
+                                </select>
+                                @error('models_id')<span class="text-danger">{{ $message }}</span>@enderror
+                            </div>
+                            <br>
+
+                            <div>
+                                <label for="exampleInputEmail1">سنة الصنع : <span class="tx-danger">*</span> </label>
+                                <select class="form-control model_years_id"  name="model_years_id" id="model_years_id">
+                                    <option value="" >--- اختر سنة الصنع ---</option>
+                                </select>
+                                @error('model_year')<span class="text-danger">{{ $message }}</span>@enderror
+                            </div>
+                            <br>
+
+                            <div>
+                                <label for="exampleInputEmail1" >الصور :  </label>
+                                <input type="file" class="form-control form-control"
+                                       data-parsley-class-handler="#lnWrapper" id="images[]" name="images[]" multiple>
+                                @error('images')<span class="text-danger">{{ $message }}</span>@enderror
                             </div>
                             <br>
 
@@ -398,12 +447,14 @@
                             </div>
                             <br>
 
+<!--
                             <div>
                                 <label for="exampleInputEmail1">مبلغ التأمين : <span class="tx-danger">*</span> </label>
                                 <input type="text" class="form-control" id="Insurance" name="Insurance" required>
                                 @error('Insurance')<span class="text-danger">{{ $message }}</span>@enderror
                             </div>
                             <br>
+-->
 
                             <div>
                                 <label for="exampleInputEmail1">نوع المزاد : <span class="tx-danger">*</span> </label>
@@ -441,7 +492,151 @@
                 </div>
             </div>
         </div>
+        @endif
 
+        @if(auth('trader')->check())
+            <!-- Modal effects -->
+                <div class="modal" id="modaldemo12">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content modal-content-demo">
+                            <div class="modal-header">
+                                <h6 class="modal-title">اضافة مزاد</h6><button aria-label="Close" class="close"
+                                                                               data-dismiss="modal" type="button"><span aria-hidden="true">&times;</span></button>
+                            </div>
+                            <form action="{{ route('biddings.store') }}" class=parsley-style-1' method="post" enctype="multipart/form-data">
+                                @csrf
+
+                                <div class="modal-body">
+                                    <label for="exampleInputEmail1"><h4><strong>بيانات المنتج</strong></h4></label>
+                                    <br>
+                                    <div>
+                                        <label for="exampleInputEmail1">الأسم بالعربية : <span class="tx-danger">*</span> </label>
+                                        <input type="text" class="form-control" id="name_ar" name="name_ar" required>
+                                        @error('name_ar')<span class="text-danger">{{ $message }}</span>@enderror
+                                    </div>
+                                    <br>
+
+                                    <div>
+                                        <label for="exampleInputEmail1">الأسم بالأنجليزية : <span class="tx-danger">*</span> </label>
+                                        <input type="text" class="form-control" id="name_en" name="name_en" required>
+                                        @error('name_en')<span class="text-danger">{{ $message }}</span>@enderror
+                                    </div>
+                                    <br>
+
+                                    <div>
+                                        <label for="exampleInputEmail1">حالة المنتج : <span class="tx-danger">*</span> </label>
+                                        <select class="form-control"  name="status" id="status">
+                                            <option value="" >--- اختر حالة المنتج ---</option>
+                                            <option value="new" >جديد</option>
+                                            <option value="antique" >عتيق</option>
+                                            <option value="rare" >نادر</option>
+                                            <option value="slight_damage" >ضرر طفيف</option>
+                                            <option value="damage" >محطم</option>
+                                        </select>
+                                    </div>
+
+                                    <div>
+                                        <label for="exampleInputEmail1">السعر : <span class="tx-danger">*</span> </label>
+                                        <input type="text" class="form-control" id="price" name="price" required>
+                                        @error('price')<span class="text-danger">{{ $message }}</span>@enderror
+                                    </div>
+                                    <br>
+
+                                    <div>
+                                        <label for="exampleInputEmail1">الوصف بالعربية : <span class="tx-danger">*</span> </label>
+                                        <textarea type="text" class="form-control" id="description_ar" name="description_ar" required></textarea>
+                                        @error('description_ar')<span class="text-danger">{{ $message }}</span>@enderror
+                                    </div>
+                                    <br>
+
+                                    <div>
+                                        <label for="exampleInputEmail1">الوصف بالانجليزية : <span class="tx-danger">*</span> </label>
+                                        <textarea type="text" class="form-control" id="description_en" name="description_en" required></textarea>
+                                        @error('description_en')<span class="text-danger">{{ $message }}</span>@enderror
+                                    </div>
+                                    <br>
+
+                                    <div>
+                                        <label for="exampleInputEmail1">العلامة التجارية : <span class="tx-danger">*</span> </label>
+                                        <select class="form-control brands_id"  name="brands_id" id="brands_id">
+                                            <option value="" >--- اختر العلامة التجارية ---</option>
+                                            @foreach( $brands as $brand)
+                                                <option value="{{$brand->id}}" >{{$brand->name_ar}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <br>
+
+                                    <div>
+                                        <label for="exampleInputEmail1">الموديل : <span class="tx-danger">*</span> </label>
+                                        <select class="form-control models_id"  name="models_id" id="models_id">
+                                            <option value="" >--- اختر الموديل ---</option>
+                                        </select>
+                                        @error('models_id')<span class="text-danger">{{ $message }}</span>@enderror
+                                    </div>
+                                    <br>
+
+                                    <div>
+                                        <label for="exampleInputEmail1">سنة الصنع : <span class="tx-danger">*</span> </label>
+                                        <select class="form-control model_years_id"  name="model_years_id" id="model_years_id">
+                                            <option value="" >--- اختر سنة الصنع ---</option>
+                                        </select>
+                                        @error('model_year')<span class="text-danger">{{ $message }}</span>@enderror
+                                    </div>
+                                    <br>
+
+                                    <div>
+                                        <label for="exampleInputEmail1" >الصور :  </label>
+                                        <input type="file" class="form-control form-control"
+                                               data-parsley-class-handler="#lnWrapper" id="images[]" name="images[]" multiple>
+                                        @error('images')<span class="text-danger">{{ $message }}</span>@enderror
+                                    </div>
+                                    <br>
+
+                                    <hr>
+
+                                    <label for="exampleInputEmail1"><h4><strong>بيانات المزاد</strong></h4></label>                        <br>
+
+                                    <div>
+                                        <label for="exampleInputEmail1">الحد الأدني للمزاد : <span class="tx-danger">*</span> </label>
+                                        <input type="text" class="form-control" id="min_auction" name="min_auction" required>
+                                        @error('min_auction')<span class="text-danger">{{ $message }}</span>@enderror
+                                    </div>
+                                    <br>
+
+<!--                                    <div>
+                                        <label for="exampleInputEmail1">مبلغ التأمين : <span class="tx-danger">*</span> </label>
+                                        <input type="text" class="form-control" id="Insurance" name="Insurance" required>
+                                        @error('Insurance')<span class="text-danger">{{ $message }}</span>@enderror
+                                    </div>
+                                    <br>-->
+
+                                    <div>
+                                        <label for="exampleInputEmail1">نوع المزاد : <span class="tx-danger">*</span> </label>
+                                        <select class="form-control"  name="type" id="type">
+                                            <option value="" >--- اختر نوع المزاد ---</option>
+                                            <option value="open" >مفتوح</option>
+                                            <option value="close" >مغلق</option>
+                                        </select>
+                                    </div>
+                                    <br>
+
+                                    <div>
+                                        <label for="exampleInputEmail1">تاريخ انتهاء المزاد : <span class="tx-danger">*</span> </label>
+                                        <input type="date" class="form-control" id="end_at" name="end_at" required>
+                                        @error('end_at')<span class="text-danger">{{ $message }}</span>@enderror
+                                    </div>
+                                    <br>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">الغاء</button>
+                                    <button type="submit" class="btn btn-primary">اضافة</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+        @endif
 
 
         <!-- Modal effects -->
@@ -504,5 +699,51 @@
                     modal.find('.modal-body #id').val(id);
                     modal.find('.modal-body #name_ar').val(name_ar);
                 })
+            </script>
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    $('select[name="brands_id"]').on('change', function() {
+                        var models_id = $(this).val();
+                        console.log(models_id);
+                        if(models_id) {
+                            $.ajax({
+                                url: '/admin/myform/ajax/'+models_id,
+                                type: "GET",
+                                dataType: "json",
+                                success:function(data) {
+                                    $('select[name="models_id"]').empty();
+                                    $.each(data, function(key, value) {
+                                        $('select[name="models_id"]').append('<option value="'+ key +'">'+ value +'</option>');
+                                    });
+                                }
+                            });
+                        }else{
+                            $('select[name="models_id"]').empty();
+                        }
+                    });
+                });
+            </script>
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    $('select[name="brands_id"]').on('change', function() {
+                        var model_years_id = $(this).val();
+                        console.log(model_years_id);
+                        if(model_years_id) {
+                            $.ajax({
+                                url: '/admin/myform2/ajax/'+model_years_id,
+                                type: "GET",
+                                dataType: "json",
+                                success:function(data) {
+                                    $('select[name="model_years_id"]').empty();
+                                    $.each(data, function(key, value) {
+                                        $('select[name="model_years_id"]').append('<option value="'+ key +'">'+ value +'</option>');
+                                    });
+                                }
+                            });
+                        }else{
+                            $('select[name="model_years_id"]').empty();
+                        }
+                    });
+                });
             </script>
 @endsection

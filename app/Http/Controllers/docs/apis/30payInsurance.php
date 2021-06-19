@@ -28,19 +28,7 @@ return
             'params'=>[
             ],
         ],
-        [
-            'status'=>201,
-            'params'=>[
-                'message'=>'you have been paid insurances succefully before'
-            ],
-        ],
-        [
-            'status'=>202,
-            'params'=>[
-                'message'=>'you have been paid insurances before, and Awaiting review '
-            ],
-        ],
-
+        
 
     ]
 ];

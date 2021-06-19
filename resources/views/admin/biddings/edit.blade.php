@@ -75,35 +75,27 @@
                                     </select>
                                 </div>
                                 <br>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">المميزات : <span class="tx-danger">*</span> </label>
+                                            <select class="form-control select-multiple-tags" name="features[]" id="features[]" multiple>
+                                                @foreach( $features as $feature)
+                                                    <option value="{{$feature->id}}" >{{$feature->name_ar}}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('features')<span class="text-danger">{{ $message }}</span>@enderror
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
                                 <div>
                                     <label for="exampleInputEmail1">السعر : <span class="tx-danger">*</span> </label>
                                     <input type="text" value="{{old('price',$bidding->product->price)}}" class="form-control" id="price" name="price" required>
                                     @error('price')<span class="text-danger">{{ $message }}</span>@enderror
                                 </div>
                                 <br>
-                                <div>
-                                    <label for="exampleInputEmail1">الموديل : <span class="tx-danger">*</span> </label>
-                                    <select class="form-control"  name="models_id" id="models_id">
-                                        <option value="" >--- اختر الموديل ---</option>
-                                        @foreach( $models as $model)
-                                            <option value="{{$model->id}}" @if (old('models_id', $bidding->product->model->id) == $model->id) selected @endif >{{$model->model}}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('models_id')<span class="text-danger">{{ $message }}</span>@enderror
-                                </div>
-                                <br>
 
-                                <div>
-                                    <label for="exampleInputEmail1">سنة الصنع : <span class="tx-danger">*</span> </label>
-                                    <select class="form-control"  name="model_years_id" id="model_years_id">
-                                        <option value="" >--- اختر سنة الصنع ---</option>
-                                        @foreach( $model_years as $model_year)
-                                            <option value="{{$model_year->id}}" @if (old('model_years_id', $bidding->product->model_year->id) == $model_year->id) selected @endif >{{$model_year->model_year}}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('model_years_id')<span class="text-danger">{{ $message }}</span>@enderror
-                                </div>
-                                <br>
                                 <div>
                                     <label for="exampleInputEmail1">الوصف بالعربية : <span class="tx-danger">*</span> </label>
                                     <input type="text" value="{{old('description_ar',$bidding->product->description_ar)}}" class="form-control" id="description_ar" name="description_ar" required>
@@ -126,6 +118,23 @@
                                     </select>
                                 </div>
                                 <br>
+                                <div>
+                                    <label for="exampleInputEmail1">الموديل : <span class="tx-danger">*</span> </label>
+                                    <select class="form-control models_id"  name="models_id" id="models_id">
+                                        <option value="" >--- اختر الموديل ---</option>
+                                    </select>
+                                    @error('models_id')<span class="text-danger">{{ $message }}</span>@enderror
+                                </div>
+                                <br>
+
+                                <div>
+                                    <label for="exampleInputEmail1">سنة الصنع : <span class="tx-danger">*</span> </label>
+                                    <select class="form-control model_years_id"  name="model_years_id" id="model_years_id">
+                                        <option value="" >--- اختر سنة الصنع ---</option>
+                                    </select>
+                                    @error('model_year')<span class="text-danger">{{ $message }}</span>@enderror
+                                </div>
+                                <br>
                                 <hr>
                                 <label for="exampleInputEmail1"><h4><strong>بيانات المزاد</strong></h4></label>
                                 <br>
@@ -135,12 +144,12 @@
                                     @error('min_auction')<span class="text-danger">{{ $message }}</span>@enderror
                                 </div>
                                 <br>
-                                <div>
+<!--                                <div>
                                     <label for="exampleInputEmail1">مبلغ التأمين : <span class="tx-danger">*</span> </label>
                                     <input type="text" value="{{old('Insurance',$bidding->Insurance)}}" class="form-control" id="Insurance" name="Insurance" required>
                                     @error('Insurance')<span class="text-danger">{{ $message }}</span>@enderror
                                 </div>
-                                <br>
+                                <br>-->
                                 <div>
                                     <label for="exampleInputEmail1">نوع المزاد : <span class="tx-danger">*</span> </label>
                                     <select class="form-control"  name="type" id="type">
@@ -156,6 +165,7 @@
                                     @error('end_at')<span class="text-danger">{{ $message }}</span>@enderror
                                 </div>
                                 <br>
+                                @if (auth('admin')->check())
                                 @if($bidding->trader->type == 'bank')
                                     <div>
                                         <label for="exampleInputEmail1">البنك : <span class="tx-danger">*</span> </label>
@@ -179,6 +189,7 @@
                                     </div>
                                     <br>
                                 @endif
+                                @endif
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
@@ -188,4 +199,52 @@
                     </form>
                     </div>
                 </div>
+@endsection
+@section('js')
+                    <script type="text/javascript">
+                        $(document).ready(function() {
+                            $('select[name="brands_id"]').on('change', function() {
+                                var models_id = $(this).val();
+                                console.log(models_id);
+                                if(models_id) {
+                                    $.ajax({
+                                        url: '/admin/myform/ajax/'+models_id,
+                                        type: "GET",
+                                        dataType: "json",
+                                        success:function(data) {
+                                            $('select[name="models_id"]').empty();
+                                            $.each(data, function(key, value) {
+                                                $('select[name="models_id"]').append('<option value="'+ key +'">'+ value +'</option>');
+                                            });
+                                        }
+                                    });
+                                }else{
+                                    $('select[name="models_id"]').empty();
+                                }
+                            });
+                        });
+                    </script>
+                    <script type="text/javascript">
+                        $(document).ready(function() {
+                            $('select[name="brands_id"]').on('change', function() {
+                                var model_years_id = $(this).val();
+                                console.log(model_years_id);
+                                if(model_years_id) {
+                                    $.ajax({
+                                        url: '/admin/myform2/ajax/'+model_years_id,
+                                        type: "GET",
+                                        dataType: "json",
+                                        success:function(data) {
+                                            $('select[name="model_years_id"]').empty();
+                                            $.each(data, function(key, value) {
+                                                $('select[name="model_years_id"]').append('<option value="'+ key +'">'+ value +'</option>');
+                                            });
+                                        }
+                                    });
+                                }else{
+                                    $('select[name="model_years_id"]').empty();
+                                }
+                            });
+                        });
+                    </script>
 @endsection

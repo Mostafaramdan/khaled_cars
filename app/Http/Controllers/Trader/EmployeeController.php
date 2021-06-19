@@ -14,6 +14,7 @@ class EmployeeController extends Controller
     public function index(){
         $keyword = (isset(\request()->keyword) && \request()->keyword != '') ? \request()->keyword : null;
         $limit_by = (isset(\request()->limit_by) && \request()->limit_by != '') ? \request()->limit_by : self::$itemPerPage;
+
         $c_employees = employees::with(['trader'])
             ->where('traders_id','=',auth('trader')->user()->id);
 
@@ -54,7 +55,7 @@ class EmployeeController extends Controller
         $c_employee->name                = $request->name;
         $c_employee->email               = $request->email;
         $c_employee->phone               = $request->phone;
-        $c_employee->traders_id        = auth('trader')->user()->id;
+        $c_employee->traders_id          = auth('trader')->user()->id;
         $c_employee->apiToken            = Str::random(64);
         $c_employee->password            = Hash::make($request->password);
         $c_employee->save();

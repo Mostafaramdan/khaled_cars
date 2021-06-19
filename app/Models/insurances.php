@@ -12,6 +12,14 @@ class insurances extends Model
     protected $guarded = [];
     public $timestamps = false;
 
+    public function user(){
+        return $this->belongsTo(users::class,'users_id');
+    }
+
+    public function image(){
+        return $this->belongsTo(images::class,'images_id');
+    }
+
     public function users(){
         return $this->belongsTo(users::class);
     }
@@ -20,11 +28,12 @@ class insurances extends Model
         return $this->belongsTo(insurances_slides::class,'insurances_slides_id');
     }
 
+    public function insurances_slide(){
+        return $this->belongsTo(insurances_slides::class,'insurances_slides_id');
+    }
+
     public function images(){
         return $this->belongsTo(images::class);
     }
 
-    public function biddings(){
-        return $this->belongsTo(biddings::class);
-    }
 }

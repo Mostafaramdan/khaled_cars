@@ -37,22 +37,6 @@ return
                 'validation'=>'optional',
             ],
             [
-                'name'=>'model',
-                'dataType'=>'string',
-                'validation'=>'optional',
-            ],
-            [
-                'name'=>'modelYear',
-                'dataType'=>'string',
-                'validation'=>'optional',
-            ],
-            [
-                'name'=>'model',
-                'dataType'=>'string',
-                'validation'=>'optional',
-            ],
-
-            [
                 'name'=>'featureIds',
                 'dataType'=>'array of int ',
                 'validation'=>'optional',
@@ -64,13 +48,6 @@ return
                 'validation'=>'optional',
                 'description'=> 'it can be open or close '
             ],
-            [
-                'name'=>'carStatus',
-                'dataType'=>'string',
-                'validation'=>'optional',
-                'description'=> 'it can be new , antique , rare , slight_damage ,damage '
-            ],
-
             [
                 'name'=>'page',
                 'dataType'=>'int',

@@ -36,7 +36,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = 'employee/e_biddings';
+    protected $redirectTo = 'admin/biddings';
     /**
      * Create a new controller instance.
      *

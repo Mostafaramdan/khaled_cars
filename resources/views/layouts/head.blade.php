@@ -18,4 +18,6 @@
 <link href="{{URL::asset('assets/css-rtl/style-dark.css')}}" rel="stylesheet">
 <!---Skinmodes css-->
 <link href="{{URL::asset('assets/css-rtl/skin-modes.css')}}" rel="stylesheet">
+<!-- Bootstrap Bundle js -->
+<script src="{{URL::asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}"></script>
 

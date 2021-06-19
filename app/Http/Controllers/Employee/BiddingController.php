@@ -18,6 +18,7 @@ class BiddingController extends Controller
         else{
             abort(403, 'Unauthorized');
         }
+
     }
 
     public function redirect(){

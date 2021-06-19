@@ -6,6 +6,7 @@
                     <input type="text" placeholder="ابحث هنا"  class="form-control" id="keyword" name="keyword" value="{{old('keyword',request()->input('keyword'))}}">
                 </div>
             </div>
+            @if(auth('admin')->check())
             <div class="col-2">
                 <div class="form-group">
                     <select class="form-control"  name="type" id="type">
@@ -15,6 +16,7 @@
                     </select>
                 </div>
             </div>
+            @endif
             <div class="col-0">
                 <div class="form-group">
                     <select class="form-control"  name="limit_by" id="limit_by">

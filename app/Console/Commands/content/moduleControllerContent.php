@@ -3,12 +3,12 @@
 namespace App\Console\Commands\content;
 use Illuminate\Support\Str;
 
-class modueControllerContent
+class moduleControllerContent
 {
-  
+
     public static function Controller ( $fileName){
 
-        return 
+        return
 '<?php
 namespace App\Http\Controllers\dashboard;
 
@@ -34,7 +34,7 @@ class '.$fileName.' extends Controller
         $currentPage= 1;
         $records=$records->forpage(1,config(\'helperDashboard.itemPerPage\'));
         return view(\'dashboard.'.$fileName.'.index\',compact("records","totalPages",\'currentPage\'));
-    }   
+    }
 
     public static function indexPageing(Request $request)
     {
@@ -80,7 +80,7 @@ class '.$fileName.' extends Controller
             "phone.nemeric"     =>"يجب ادخال رقم التليفون بشكل صحيح ",
             "phone.between"     =>"يجب ان لا يقل رقم التليفون عن 11 ارقام ولا يزيد عن 15 رقم ",
             "phone.unique"      =>"هذا الهاتف مسجل مسبقا",
-            
+
             "regionId.required" =>"يجب ادخال البلد ",
             "regionId.exists"   =>"هذا الرقم غير مسجل في قاعدة البيانات",
 
@@ -90,11 +90,11 @@ class '.$fileName.' extends Controller
         ];
 
         $messagesEn=[
-            
+
         ];
         $ValidationFunction=$request->showAllErrors==1?\'showAllErrors\':\'Validator\';
         $Validation = helper::{$ValidationFunction}($request->all(), $rules, $messages,\'en\'?$messagesAr:$messagesEn);
-        if ($Validation !== null) {    return $Validation;    }    
+        if ($Validation !== null) {    return $Validation;    }
         $record= self::$model::createUpdate([
             \'id\'=>$request->id,
             \'name\'=>$request->name,
@@ -102,13 +102,13 @@ class '.$fileName.' extends Controller
             \'email\'=>$request->email,
             \'phone\'=>$request->phone,
             \'password\'=>$request->password,
-            \'image\'=>$request->image,  
-            \'is_android\'=>1, 
-            \'is_online\'=>0, 
+            \'image\'=>$request->image,
+            \'is_android\'=>1,
+            \'is_online\'=>0,
         ]);
 
         $message=$request->id?"edited successfully":\'added successfully\';
-        
+
         return response()->json([\'status\'=>200,\'message\'=>$message,\'record\'=>$record]);
     }
 
@@ -137,11 +137,11 @@ class '.$fileName.' extends Controller
     }
 }
 
-'; 
+';
     }
     public static function  addEditModalBladeContent ( $fileName){
 
-        return 
+        return
 '<div class="modal fade addEdit-new-modal" id="addEdit-new-modal" tabindex="-1" role="dialog" aria-labelledby="addEdit-new-modal"aria-hidden="true">
     <div class="loading-container"  >
       <div class="spinner-border text-primary" role="status">
@@ -215,7 +215,7 @@ class '.$fileName.' extends Controller
                     <div class="form-group" >
                         <div class="progress " >
                             <div class="progress-bar"  role="progressbar" style="width: 0%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">0%</div>
-                        </div> 
+                        </div>
                     </div>
                 </form>
                 <div class="alert " >
@@ -232,7 +232,7 @@ class '.$fileName.' extends Controller
 </div>';
     }
     public static function  indexBladeContent ( $fileName){
-        return 
+        return
 '@extends (\'dashboard.layouts.master\')
 @section(\'title\', \''.$fileName.'\')
 @section (\'content\')
@@ -248,7 +248,7 @@ class '.$fileName.' extends Controller
         <form class="mb-4" id="getOptions">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
           <div class="form-row">
-            
+
             <div class="m-2">
               <input type="search" class="form-control" placeholder="بحث" name="search">
             </div>
@@ -282,7 +282,7 @@ class '.$fileName.' extends Controller
         </div>
 
         <!-- pagination -->
-        <div class="paging">  
+        <div class="paging">
           @include(\'dashboard.layouts.paging\')
         </div>
         <!-- end pagination -->
@@ -340,7 +340,7 @@ class '.$fileName.' extends Controller
         for (var k in record) {
           if (record.hasOwnProperty(k)) {
             if( k.includes(\'image\') || k.includes(\'Image\')  ){
-              if(record[k]){  
+              if(record[k]){
                 $(\'img#\'+k).attr(\'src\', record[k]).attr("hidden",false);
               }else{
                  $(\'img #\'+k).attr("hidden",true);
@@ -358,7 +358,7 @@ class '.$fileName.' extends Controller
               }else{
                 $(".addEdit-new-modal input[name=\'"+k+"\']").val(record[k]);
                 $(".addEdit-new-modal select[name=\'"+k+"\'] option[value=\'"+record[k]+"\']").prop(\'selected\', true);
-                
+
               }
             }
           }
@@ -377,7 +377,7 @@ class '.$fileName.' extends Controller
               </div>
           `);
         }
-        
+
         if(record.hasOffer == true){
           $(".offer_Info").removeClass("d-none");
           $("#customCheck1").attr(\'checked\',true);
@@ -386,7 +386,7 @@ class '.$fileName.' extends Controller
           $(".addEdit-new-modal input[name=\'startAt\']").val(record.offer.startAt);
           $(".addEdit-new-modal input[name=\'endAt\']").val(record.offer.endAt);
 
-          
+
         }else{
           $(".offer_Info").addClass("d-none");
           $("#customCheck1").attr(\'checked\',false);
@@ -398,13 +398,13 @@ class '.$fileName.' extends Controller
       }
     });
   });
-</script> 
+</script>
 @endpush
 @endsection
         ';
     }
     public static function  viewModalBladeContent ( $fileName){
-        return 
+        return
 '<div class="modal fade view-modal" id="view-modal" tabindex="-1" role="dialog"
 aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
 <div class="loading-container"  >
@@ -451,7 +451,7 @@ aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
           <span class="phone">2</span>
         </li>
         <li class="list-group-item d-flex justify-content-between align-items-center">
-          البريد الالكتورني 
+          البريد الالكتورني
           <span class="email">2</span>
         </li>
         <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -469,7 +469,7 @@ aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
 </div>';
     }
     public static function tableInfoBladeContent ( $fileName){
-return 
+return
 '<thead class="thead-dark">
 <tr>
 <th scope="col">الاسم</th>

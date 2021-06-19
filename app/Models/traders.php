@@ -25,6 +25,7 @@ class traders extends  Authenticatable
     public function biddings(){
         return $this->hasMany(biddings::class);
     }
+
     public function image(){
         return $this->belongsTo(images::class,'images_id');
     }

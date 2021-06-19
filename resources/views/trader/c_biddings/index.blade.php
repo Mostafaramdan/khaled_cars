@@ -47,7 +47,7 @@
                     <div class="col-sm-1 col-md-2">
                         <a class="btn btn-primary modal-effect" href="#modaldemo8" data-toggle="modal">اضافة مزاد</a>
                     </div>
-                    @include('company.c_biddings.filter.filter')
+                    @include('trader.c_biddings.filter.filter')
                 </div>
                 <div class="card-body">
                     <div class="table-responsive hoverable-table">
@@ -115,7 +115,6 @@
         <!--/div-->
 
         <!-- Modal effects -->
-
         <div class="modal" id="modaldemo8">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content modal-content-demo">

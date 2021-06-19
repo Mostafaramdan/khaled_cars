@@ -44,6 +44,7 @@
         <div class="col-xl-12">
             <div class="card">
                 <div class="card-header pb-0">
+                    @if(auth('admin')->check())
                     @if (str_contains(auth('admin')->user()->permissions, "add_employee") !== false)
                         <div class="row">
                             <div class="col-sm-1 col-md-2">
@@ -60,6 +61,11 @@
                             </div>
                         </div>
                     @endif
+                    @elseif(auth('trader')->check())
+                        <div class="col-sm-1 col-md-2">
+                            <a class="btn btn-primary modal-effect" href="#modaldemo12" data-toggle="modal">اضافة موظف</a>
+                        </div>
+                    @endif
                     @include('admin.employees.filter.filter')
                 </div>
                 <div class="card-body">
@@ -70,9 +76,15 @@
                                 <th class="wd-15p border-bottom-0">الأسم</th>
                                 <th class="wd-15p border-bottom-0">الإيميل</th>
                                 <th class="wd-15p border-bottom-0">رقم الهاتف</th>
+                                @if(auth('admin')->check())
                                 <th class="wd-15p border-bottom-0">اسم التاجر</th>
+
                                 @if (str_contains(auth('admin')->user()->permissions, "delete_employee") !== false || str_contains(auth('admin')->user()->permissions, "edit_employee") !== false)
                                 <th class="wd-15p border-bottom-0">العمليات</th>
+                                @endif
+                                @endif
+                                @if(auth('trader')->check())
+                                    <th class="wd-15p border-bottom-0">العمليات</th>
                                 @endif
                             </tr>
                             </thead>
@@ -84,7 +96,7 @@
                                     <td>{{ $employee->name }}</td>
                                     <td>{{ $employee->email }}</td>
                                     <td>{{ $employee->phone }}</td>
-
+                                    @if(auth('admin')->check())
                                     @if($employee->trader->type == 'company')
                                         <td>  <span style="color: limegreen">( شركة )</span> : {{ $employee->trader->name}}</td>
                                     @elseif($employee->trader->type == 'bank')
@@ -104,6 +116,16 @@
                                         @endif
                                     </td>
                                     @endif
+                                    @endif
+                                    @if(auth('trader')->check())
+                                        <td>
+                                        <a href="{{ route('employees.edit', $employee->id) }}" class="btn btn-sm btn-info"
+                                           title="تعديل"> <i class="las la-pen"></i> تعديل</a>
+                                        <button class="btn btn-danger btn-sm " data-id="{{ $employee->id }}"
+                                                data-name_ar="{{ $employee->name }}" data-toggle="modal"
+                                                data-target="#modaldemo9"> <i class="las la-trash"></i> حذف</button>
+                                        </td>
+                                    @endif
                                 </tr>
                             @empty
                                 <tr>
@@ -120,9 +142,8 @@
             </div>
         </div>
         <!--/div-->
-
+        @if(auth('admin')->check())
         <!-- Modal effects -->
-
         <div class="modal" id="modaldemo8">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content modal-content-demo">
@@ -177,9 +198,7 @@
             </div>
         </div>
 
-
         <!-- Modal effects -->
-
         <div class="modal" id="modaldemo11">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content modal-content-demo">
@@ -233,8 +252,53 @@
                 </div>
             </div>
         </div>
-
-
+        @endif
+        @if(auth('trader')->check())
+        <!-- Modal effects -->
+        <div class="modal" id="modaldemo12">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content modal-content-demo">
+                    <div class="modal-header">
+                        <h6 class="modal-title">اضافة موظف</h6><button aria-label="Close" class="close"
+                                                                              data-dismiss="modal" type="button"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <form action="{{ route('employees.store') }}" class=parsley-style-1' method="post" enctype="multipart/form-data">
+                        @csrf
+                        <div class="modal-body">
+                            <div>
+                                <label for="exampleInputEmail1">الأسم : <span class="tx-danger">*</span> </label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                                @error('name')<span class="text-danger">{{ $message }}</span>@enderror
+                            </div>
+                            <br>
+                            <div>
+                                <label for="exampleInputEmail1">البريد الألكتروني : <span class="tx-danger">*</span> </label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                                @error('email')<span class="text-danger">{{ $message }}</span>@enderror
+                            </div>
+                            <br>
+                            <div>
+                                <label for="exampleInputEmail1">رقم الهاتف : <span class="tx-danger">*</span> </label>
+                                <input type="text" class="form-control" id="phone" name="phone" required>
+                                @error('phone')<span class="text-danger">{{ $message }}</span>@enderror
+                            </div>
+                            <br>
+                            <div>
+                                <label for="exampleInputEmail1">كلمة المرور : <span class="tx-danger">*</span> </label>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                                @error('password')<span class="text-danger">{{ $message }}</span>@enderror
+                            </div>
+                            <br>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">الغاء</button>
+                            <button type="submit" class="btn btn-primary">اضافة</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        @endif
         <!-- Modal effects -->
         <div class="modal" id="modaldemo9">
             <div class="modal-dialog modal-dialog-centered" role="document">

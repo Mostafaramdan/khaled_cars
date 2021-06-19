@@ -2,7 +2,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Console\Commands\content\modueControllerContent;
+use App\Console\Commands\content\moduleControllerContent;
 
 class nmodule extends Command
 {
@@ -41,17 +41,17 @@ class nmodule extends Command
         $blades =['addEditModal','index','viewModal','tableInfo'];
         $folderPath="app/Http/Controllers/dashboard/";
         $bladePath="resources/views/dashboard/".$moduleName."/";
-        if (!file_exists( $folderPath)) 
+        if (!file_exists( $folderPath))
             mkdir( $folderPath, 0777, true);
 
-        if (!file_exists( $bladePath)) 
+        if (!file_exists( $bladePath))
             mkdir( $bladePath, 0777, true);
 
 
         //create Controller
         $path =$moduleName.'.php' ;
         $file = fopen( $folderPath.$path, "wb") ;
-        fwrite($file, modueControllerContent::Controller($moduleName));
+        fwrite($file, moduleControllerContent::Controller($moduleName));
         fclose($file);
 
        //create views
@@ -59,11 +59,11 @@ class nmodule extends Command
             $path =$blade.'.blade'.'.php' ;
             $file = fopen( $bladePath.$path, "wb") ;
             $funcNAme= $blade.'BladeContent';
-            fwrite($file, modueControllerContent::{$funcNAme}($moduleName));
+            fwrite($file, moduleControllerContent::{$funcNAme}($moduleName));
             fclose($file);
-    
+
         }
-        
+
         $myfile = fopen("routes/dashboard.php", "a") or die("Unable to open file!");
         $txt = "\n route::get('{$moduleName}','{$moduleName}@index')->name('dashboard.{$moduleName}.index');
         route::post('{$moduleName}/createUpdate','{$moduleName}@createUpdate')->name('dashboard.{$moduleName}.createUpdate');

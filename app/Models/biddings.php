@@ -15,39 +15,32 @@ class biddings extends Model
         'Insurance',
         'min_auction',
         'type',
-        'companies_id',
-        'banks_id',
+        'traders_id',
     ];
 
     public function insurances(){
         return $this->hasMany(insurances::class);
     }
 
-    public function products()
-    {
-        return $this->belongsTo(products::class);
-    }
-
-    public function companies(){
-        return $this->belongsTo(companies::class);
-    }
-
-    public function banks(){
-        return $this->belongsTo(banks::class);
-    }
     function product()
     {
         return $this->belongsTo(products::class,'products_id');
     }
-    
+
+    public function trader(){
+        return $this->belongsTo(traders::class,'traders_id');
+    }
+
     function reviews()
     {
         return $this->hasMany(reviews::class,'biddings_id');
     }
+
     function bidders()
     {
         return $this->hasMany(bidders::class,'biddings_id');
     }
+
     public function favourites()
     {
         return $this->hasMany(favourites::class,'biddings_id');

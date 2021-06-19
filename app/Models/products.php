@@ -32,14 +32,17 @@ class products extends Model
     {
         return $this->belongsTo(model_years::class,'model_years_id');
     }
-    function GetFeaturesAttribute()
+
+    public function GetFeaturesAttribute()
     {
         return features::find(json_decode($this->attributes['features'],true));
     }
-    function GetImagesAttribute()
+
+    public function GetImagesAttribute()
     {
         return images::find(json_decode($this->attributes['images'],true));
     }
+
     public function brands(){
         return $this->belongsTo(brands::class);
     }
@@ -47,4 +50,23 @@ class products extends Model
     public function biddings(){
         return $this->hasMany(biddings::class);
     }
+
+
+    /**
+     * Set the features
+     *
+     */
+    public function setFeaturesAttribute($value)
+    {
+        $this->attributes['features'] = json_encode($value);
+    }
+    /**
+     * Set the features
+     *
+     */
+    public function setImagesAttribute($value)
+    {
+        $this->attributes['images'] = json_encode($value);
+    }
+
 }

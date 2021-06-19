@@ -22,7 +22,7 @@ class bidders extends Model
         return $this->belongsTo(users::class,'users_id');
     }
     public function bidding(){
-        return $this->belongsTo(biddings::class);
+        return $this->belongsTo(biddings::class,'biddings_id');
     }
     public function orders(){
         return $this->hasMany(orders::class,'bidders_id');

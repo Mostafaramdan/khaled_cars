@@ -18,14 +18,11 @@ class employees extends  Authenticatable
         'email',
         'password',
         'is_active',
-        'companies_id',
-        'banks_id',
+        'traders_id',
     ];
-    public function companies(){
-        return $this->belongsTo(companies::class);
+
+    public function trader(){
+        return $this->belongsTo(traders::class,'traders_id');
     }
 
-    public function banks(){
-        return $this->belongsTo(banks::class);
-    }
 }

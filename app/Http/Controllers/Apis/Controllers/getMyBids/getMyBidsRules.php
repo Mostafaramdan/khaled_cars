@@ -13,8 +13,7 @@ class getMyBidsRules extends index
     public static function rules (){
 
         $rules=[
-            "apiToken"  =>"required|exists:users,apiToken",
-            'type'      =>"required|in:,open,win,lose",
+            "apiToken"   =>"required|exists:users,apiToken",
             "page"      =>"required|numeric"
         ];
 
@@ -22,8 +21,8 @@ class getMyBidsRules extends index
             "apiToken.required"     =>400,
             "apiToken.exists"       =>405,
 
-            "type.required"         =>400,
-            "type.in"               =>405,
+            "userId.required"       =>400,
+            "userId.exists"         =>405,
 
             "page.required"         =>400,
             "page.numeric"          =>405
@@ -33,7 +32,8 @@ class getMyBidsRules extends index
             "apiToken.required"     =>"يجب ادخال التوكن",
             "apiToken.exists"       =>"هذا التوكن غير موجود",
 
-            "type.required"       =>"يجب ادخال النوع ",
+            "userId.exists"         =>"هذا الشخص غير موجود",
+            "userId.required"       =>"يجب ادخال رقم الشخص",
 
             "page.required"         =>"يجب ادخال رقم الصفحة",
             "page.numeric"          =>"يجب ادخال رقم الصفحة بشكل صحيح",

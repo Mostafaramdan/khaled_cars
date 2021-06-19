@@ -15,7 +15,7 @@ class payInsuranceRules extends index
         $rules=[
             "apiToken"   =>"required|exists:users,apiToken",
             'image'    =>'required|string',
-            "insuranceSlide"     =>"required|exists:insurances_slides,id",
+            "bidId"     =>"required|exists:biddings,id",
         ];
 
         $messages=[
@@ -24,8 +24,8 @@ class payInsuranceRules extends index
 
             "image.required"       =>400,
 
-            "insuranceSlide.required"       =>400,
-            "insuranceSlide.exists"         =>405,
+            "bidId.required"       =>400,
+            "bidId.exists"         =>405,
 
         ];
 
@@ -33,8 +33,8 @@ class payInsuranceRules extends index
             "apiToken.required"     =>"يجب ادخال التوكن",
             "apiToken.exists"       =>"هذا التوكن غير موجود",
 
-            "insuranceSlide.exists"         =>"رقم الشريحة غير موجود",
-            "insuranceSlide.required"       =>"يجب ادخال رقم الشريحة",
+            "bidId.exists"         =>"رقم المزايدة غير موجود",
+            "bidId.required"       =>"يجب ادخال رقم المزايدة",
 
             "image.required"       =>"يجب ادخال الصورة ",
 

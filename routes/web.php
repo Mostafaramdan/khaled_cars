@@ -67,15 +67,10 @@ Route::group(['prefix'=>'admin'], function (){
         Route::resource('bidders', 'App\Http\Controllers\Admin\BidderController')->except(['edit','store','update','create']);
         Route::resource('insurances', 'App\Http\Controllers\Admin\InsuranceController');
 
-        Route::resource('bank_biddings', 'App\Http\Controllers\Admin\BankBiddingController');
-        Route::put('/bank_biddings/updateStatus/{bidding}', [App\Http\Controllers\Admin\BankBiddingController::class, 'updateStatus'])->name('bank_biddings.status');
-
-
-        Route::resource('company_biddings', 'App\Http\Controllers\Admin\CompanyBiddingController');
-        Route::put('/company_biddings/updateStatus/{bidding}', [App\Http\Controllers\Admin\CompanyBiddingController::class, 'updateStatus'])->name('company_biddings.status');
-
         Route::resource('biddings', 'App\Http\Controllers\Admin\BiddingController');
         Route::put('/biddings/updateStatus/{bidding}', [App\Http\Controllers\Admin\BiddingController::class, 'updateStatus'])->name('biddings.status');
+        Route::get('myform/ajax/{id}', [App\Http\Controllers\Admin\BiddingController::class, 'subBrand'])->name('myform.ajax');
+        Route::get('myform2/ajax/{id}', [App\Http\Controllers\Admin\BiddingController::class, 'subBrand2'])->name('myform2.ajax');
 
         Route::resource('orders', 'App\Http\Controllers\Admin\OrderController');
         Route::put('/orders/updateStatus/{bidding}', [App\Http\Controllers\Admin\OrderController::class, 'updateStatus'])->name('orders.status');

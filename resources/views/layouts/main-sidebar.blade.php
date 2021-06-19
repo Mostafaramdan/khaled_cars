@@ -219,7 +219,7 @@
                 <li class="side-item side-item-category">القوائم الرئيسية</li>
 
                 <li class="slide">
-                    <a class="side-menu__item" href="{{ url('/' . ($page = 'trader')) }}"><svg
+                    <a class="side-menu__item" href="{{ url('/' . ($page = 'admin')) }}"><svg
                             xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24">
                             <path d="M0 0h24v24H0V0z" fill="none" />
                             <path d="M19 5H5v14h14V5zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" opacity=".3" />
@@ -229,7 +229,7 @@
                 </li>
 
                 <li class="slide">
-                    <a class="side-menu__item" href="{{ url('/' . ($page = 'trader/c_employees')) }}"><svg
+                    <a class="side-menu__item" href="{{ url('/' . ($page = 'admin/employees')) }}"><svg
                             xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24">
                             <path d="M0 0h24v24H0V0z" fill="none" />
                             <path d="M5 5h4v6H5zm10 8h4v6h-4zM5 17h4v2H5zM15 5h4v2h-4z" opacity=".3" />
@@ -238,7 +238,7 @@
                 </li>
 
                 <li class="slide">
-                    <a class="side-menu__item" href="{{ url('/' . ($page = 'trader/c_biddings')) }}"><svg
+                    <a class="side-menu__item" href="{{ url('/' . ($page = 'admin/biddings')) }}"><svg
                             xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24">
                             <path d="M0 0h24v24H0V0z" fill="none" />
                             <path xmlns="http://www.w3.org/2000/svg" d="M2 3H4V21H2zM20 3H22V21H20zM5 13L7 13 7 14 9 14 9 13 11 13 11 14 13 14 13 13 17 13 17 14 19 14 19 13 19 11 19 10 17 10 17 11 13 11 13 10 11 10 11 11 9 11 9 10 7 10 7 11 5 11zM5 4L5 5 5 7 5 8 7 8 7 7 15 7 15 8 17 8 17 7 19 7 19 5 17 5 17 4 15 4 15 5 7 5 7 4zM5 17L5 19 5 20 7 20 7 19 9 19 9 20 11 20 11 19 19 19 19 17 11 17 11 16 9 16 9 17 7 17 7 16 5 16z"/>
@@ -255,12 +255,13 @@
                 <li class="side-item side-item-category">القوائم الرئيسية</li>
 
                 <li class="slide">
-                    <a class="side-menu__item" href="{{ url('/' . ($page = 'employee/e_biddings')) }}"><svg
+                    <a class="side-menu__item" href="{{ url('/' . ($page = 'admin/biddings')) }}"><svg
                             xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24">
                             <path d="M0 0h24v24H0V0z" fill="none" />
                             <path xmlns="http://www.w3.org/2000/svg" d="M2 3H4V21H2zM20 3H22V21H20zM5 13L7 13 7 14 9 14 9 13 11 13 11 14 13 14 13 13 17 13 17 14 19 14 19 13 19 11 19 10 17 10 17 11 13 11 13 10 11 10 11 11 9 11 9 10 7 10 7 11 5 11zM5 4L5 5 5 7 5 8 7 8 7 7 15 7 15 8 17 8 17 7 19 7 19 5 17 5 17 4 15 4 15 5 7 5 7 4zM5 17L5 19 5 20 7 20 7 19 9 19 9 20 11 20 11 19 19 19 19 17 11 17 11 16 9 16 9 17 7 17 7 16 5 16z"/>
                         </svg><span class="side-menu__label">المزادات</span></a>
                 </li>
+
             </ul>
 
         @endif

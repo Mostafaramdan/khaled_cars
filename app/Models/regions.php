@@ -15,6 +15,15 @@ class regions extends Model
     public function regions(){
         return $this->hasMany(regions::class);
     }
+
+    public function country(){
+        return $this->belongsTo(countries::class,'countries_id');
+    }
+
+    public function region(){
+        return $this->belongsTo(regions::class,'regions_id');
+    }
+
     public static function allActive()
     {
         return self::orderBy('id','DESC')->get()->where('deleted_at',null)->where('is_active',1);

@@ -37,22 +37,7 @@ class objects extends index
         $record->image?$object['image'] =Request()->root().$record->image:$object['image'] =null;
         $object['email'] = $record->email;
         $object['phone'] = $record->phone;
-        $object['winnerBids'] =bidders::where('users_id',$record->id)->whereHas('orders')->count();
-        $object['currentOpenBids'] = bidders::where('users_id',$record->id)->whereDoesntHave('orders')->count();
-        $object['phone'] = $record->phone;
         $object['lang'] = $record->lang;
-        return $object;
-    }
-
-    public static function trader ($record)
-    {
-        if($record == null  ) {return null;}
-        $object = [];
-        $object['id'] = $record->id;
-        $object['name'] = $record->name;
-        !$record->image?:$object['image'] =self::image($record->image);
-        $object['email'] = $record->email;
-        $object['phone'] = $record->phone;
         return $object;
     }
 
@@ -72,7 +57,6 @@ class objects extends index
         $object = [];
         $object['id'] = $record->id;
         $object['name']=$record['name_'.self::$lang];
-        $object['image'] = self::image($record->image);
 
         return $object;
     }
@@ -167,7 +151,6 @@ class objects extends index
 
     public static function image ($record)
     {
-        if(!$record)return;
         $object = [];
         $object['id'] = $record->id;
         $object['image'] = Str::contains($record->image,'http') ? $record->image :Request()->root().$record->image;
@@ -178,18 +161,7 @@ class objects extends index
         $object = [];
         $object['id'] = $record->id;
         $object['name'] = $record->{'name_'.self::$lang};
-        !$record->image? : $object['image'] = self::image($record->image);
-        return $object;
-    }
-    public static function insurances_slide ($record)
-    {
-        $object = [];
-        $object['id'] = $record->id;
-        $object['name'] = $record->{'name_'.self::$lang};
-        $object['description'] = $record->{'description_'.self::$lang};
-        !$record->image? :$object['images'] = self::image($record->image);
-        $object['price'] = $record->price;
-        $object['totalBiddings'] = $record->total_biddings;
+        $object['image'] = Str::contains($record->image,'http') ? $record->image :Request()->root().$record->image;
         return $object;
     }
 
@@ -215,7 +187,6 @@ class objects extends index
         $object = [];
         $object['id'] = (double)$record->id;
         $object['endAt'] = (double) strtotime($record->end_at);
-        $object['createdAt'] =  (int)strtotime( $record->created_at );
         $object['type'] = $record->type;
         $object['minAuction'] = $record->min_auction;
         $object['Insurance'] = (double)$record->Insurance;
@@ -232,11 +203,11 @@ class objects extends index
         // accept bid object
         $object = [];
         $object['totalRate'] =round( $record->reviews->avg('rate') , 2);
-        $object['five'] =round( $record->reviews->whereBetween('rate',[4.1,5])->count() , 2);
-        $object['four'] =round($record->reviews->whereBetween('rate',[3.1,4])->count() , 2);
-        $object['three'] =round($record->reviews->whereBetween('rate',[2.1,3])->count() , 2);
-        $object['two'] =round($record->reviews->whereBetween('rate',[1.1,2])->count() , 2);
-        $object['one'] =round($record->reviews->whereBetween('rate',[0,1])->count() , 2);
+        $object['5'] =round( $record->reviews->whereBetween('rate',[4.1,5])->count() , 2);
+        $object['4'] =round($record->reviews->whereBetween('rate',[3.1,4])->count() , 2);
+        $object['3'] =round($record->reviews->whereBetween('rate',[2.1,3])->count() , 2);
+        $object['2'] =round($record->reviews->whereBetween('rate',[1.1,2])->count() , 2);
+        $object['1'] =round($record->reviews->whereBetween('rate',[0,1])->count() , 2);
 
         return $object;
     }
@@ -245,7 +216,6 @@ class objects extends index
     {
         $object = [];
         $object['id'] = (double)$record->id;
-        $object['createdAt'] =  (int)strtotime( $record->created_at );
         $object['user']  = self::user($record->user);
         $object['price']  = $record->price;
 
@@ -259,20 +229,6 @@ class objects extends index
         $object['user'] = self::userMin($record->user);
         $object['rate'] = $record->rate;
         $object['comment'] = $record->comment;
-        return $object;
-    }
-    public static function model ($record)
-    {
-        $object = [];
-        $object['id'] = $record->id;
-        $object['model'] = $record->model;
-        return $object;
-    }
-    public static function model_year ($record)
-    {
-        $object = [];
-        $object['id'] = $record->id;
-        $object['modelYear'] = $record->model_year;
         return $object;
     }
 

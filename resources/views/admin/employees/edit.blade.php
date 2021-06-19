@@ -8,7 +8,7 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex">
-                <h4 class="content-title mb-0 my-auto">موظفين البنوك</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ تعديل
+                <h4 class="content-title mb-0 my-auto">الموظفين</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ تعديل
                 الموظف ( {{ $employee->name }} )</span>
             </div>
         </div>
@@ -74,6 +74,7 @@
                                         @error('password')<span class="text-danger">{{ $message }}</span>@enderror
                                     </div>
                                     <br>
+                                    @if(auth('admin')->check())
                                     @if($employee->trader->type == 'bank')
                                     <div>
                                         <label for="exampleInputEmail1">البنك : <span class="tx-danger">*</span> </label>
@@ -95,6 +96,7 @@
                                             </select>
                                         </div>
                                     @endif
+                                        @endif
 
                                 </div>
 

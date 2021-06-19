@@ -49,7 +49,7 @@ return
 
             ],
             [
-                'name'=>'images',
+                'name'=>'image',
                 'dataType'=>'<a href="#image">image</a>',
                 'validation'=>'optional'
 
@@ -64,20 +64,6 @@ return
                 'name'=>'phone',
                 'dataType'=>'string',
                 'validation'=>'required'
-
-            ],
-            [
-                'name'=>'winnerBids',
-                'dataType'=>'int',
-                'validation'=>'required',
-                'description'=>'count bidding whcich user won.'
-
-            ],
-            [
-                'name'=>'currentOpenBids',
-                'dataType'=>'int',
-                'validation'=>'required',
-                'description'=>'count bidding whcich still open.'
 
             ],
             [
@@ -219,11 +205,6 @@ return
                 'validation'=>'required'
             ],
             [
-                'name'=>'createdAt',
-                'dataType'=>'int',
-                'validation'=>'required'
-            ],
-            [
                 'name'=>'type',
                 'dataType'=>'string',
                 'validation'=>'required'
@@ -280,11 +261,7 @@ return
                 'dataType'=>'float',
                 'validation'=>'required'
             ],
-            [
-                'name'=>'createdAt',
-                'dataType'=>'int',
-                'validation'=>'required'
-            ],
+
             [
                 'name'=>'user',
                 'dataType'=>"<a href='#user'>user</a>",
@@ -341,38 +318,6 @@ return
         ]
     ],
     [
-        'name'=>'model',
-        'params'=>
-        [
-            [
-                'name'=>'id',
-                'dataType'=>'int',
-                'validation'=>'required'
-            ],
-            [
-                'name'=>'model',
-                'dataType'=>'string',
-                'validation'=>'required'
-            ],
-        ]
-    ],
-    [
-        'name'=>'modelYear',
-        'params'=>
-        [
-            [
-                'name'=>'id',
-                'dataType'=>'int',
-                'validation'=>'required'
-            ],
-            [
-                'name'=>'model_year',
-                'dataType'=>'string',
-                'validation'=>'required'
-            ],
-        ]
-    ],
-    [
         'name'=>'brand',
         'params'=>
         [
@@ -386,11 +331,7 @@ return
                 'name'=>'name',
                 'dataType'=>'string',
                 'validation'=>'required'
-            ],
-            [
-                'name'=>'image',
-                'dataType'=>' <a href="#image">image</a>',
-                'validation'=>'optional'
+
             ],
         ]
     ],
@@ -484,12 +425,6 @@ return
 
             ],
             [
-                'name'=>'image',
-                'dataType'=>'array of <a href="#image">image</a>',
-                'validation'=>'optional'
-
-            ],
-            [
                 'name'=>'price',
                 'dataType'=>'float',
                 'validation'=>'required'
@@ -510,16 +445,6 @@ return
                 'dataType'=>"<a href='#brand'>brand</a>",
                 'validation'=>'required'
             ],
-            [
-                'name'=>'model',
-                'dataType'=>"<a href='#model'>model</a>",
-                'validation'=>'required'
-            ],
-            [
-                'name'=>'modelYear',
-                'dataType'=>"<a href='#modelYear'>modelYear</a>",
-                'validation'=>'required'
-            ],
         ],
     ],
     [
@@ -533,14 +458,14 @@ return
 
             ],
             [
-                'name'=>'one',
+                'name'=>'1',
                 'dataType'=>'float',
                 'validation'=>'required',
                 'description'=>'from 0 to 1'
 
             ],
             [
-                'name'=>'two',
+                'name'=>'2',
                 'dataType'=>'float',
                 'validation'=>'required',
                 'description'=>'from 1.1 to 2'
@@ -548,19 +473,19 @@ return
 
             ],
             [
-                'name'=>'three',
+                'name'=>'3',
                 'dataType'=>'float',
                 'validation'=>'required',
                 'description'=>'from 2.1 to 3'
             ],
             [
-                'name'=>'four',
+                'name'=>'4',
                 'dataType'=>'float',
                 'validation'=>'required',
                 'description'=>'from 3.1 to 4'
             ],
             [
-                'name'=>'five',
+                'name'=>'5',
                 'dataType'=>'float',
                 'validation'=>'required',
                 'description'=>'from 4.1 to 5'
@@ -667,6 +592,7 @@ return
                 'name'=>'user',
                 'dataType'=>'<a href="#user">user<a>',
                 'validation'=>'required'
+
             ],
         ]
     ],
@@ -679,12 +605,15 @@ return
                 'dataType'=>'int',
                 'validation'=>'required',
                 'description'=>'it will get prices which equal or greater than with this value'
+
             ],
             [
                 'name'=>'end',
                 'dataType'=>'int',
                 'validation'=>'required',
                 'description'=>'it will get prices which equal or smaller than with this value'
+
+
             ],
         ],
     ],

@@ -12,4 +12,12 @@ class insurances_slides extends Model
     protected $guarded = [];
     public $timestamps = false;
 
+    public function insurances(){
+        return $this->hasMany(insurances::class);
+    }
+
+    public function image(){
+        return $this->belongsTo(images::class,'images_id');
+    }
+
 }

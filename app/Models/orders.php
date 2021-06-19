@@ -7,12 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class orders extends Model
 {
-    public $timestamps = false;
-    protected  $atble=['orders'];
-    function bidder()
+    protected $table = 'orders';
+    public $timestamps = ['created_at'];
+    const UPDATED_AT   = null;
+    protected $fillable = [
+        'status',
+        'price',
+        'fees',
+        'total',
+        'bidders_id'
+    ];
+
+
+    public function bidder()
     {
         return $this->belongsTo(bidders::class,'bidders_id');
     }
-
 
 }

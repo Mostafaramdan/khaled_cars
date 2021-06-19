@@ -129,7 +129,7 @@
                                     {{ implode('  ,  ',$settings->phones)}}
 
                                     <br><br>
-                                    <input type="text" id="phones" name="phones" data-role="tagsinput" >
+                                    <input type="text" id="phones"  name="phones" data-role="tagsinput" >
 
                                     <br>
                                     @if ($errors->has('phones'))

@@ -50,10 +50,10 @@
         <div class="caption">
             <h2 style="">Khaled <em>Cars</em></h2>
             <div class="main-button scroll-to-section">
-                <a href="{{route('admin.show_login_form')}}">Admin</a>
-                <a href="{{route('company.show_login_form')}}">Company</a>
-                <a href="{{route('bank.show_login_form')}}">Bank</a>
-                <a href="{{route('employee.show_login_form')}}">Employee</a>
+                <a href="{{route('employee.show_login_form')}}"><strong>لوحة تحكم الموظفين</strong></a>
+                <a href="{{route('trader.show_login_form')}}"><strong>لوحة تحكم التجار</strong></a>
+                <a href="{{route('admin.show_login_form')}}"><strong>لوحة تحكم المدراء</strong></a>
+
             </div>
         </div>
     </div>

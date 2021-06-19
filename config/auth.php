@@ -44,13 +44,9 @@ return [
             'driver' => 'session',
             'provider' => 'admins',
         ],
-        'bank' => [
+        'trader' => [
             'driver' => 'session',
-            'provider' => 'banks',
-        ],
-        'company' => [
-            'driver' => 'session',
-            'provider' => 'companies',
+            'provider' => 'traders',
         ],
         'employee' => [
             'driver' => 'session',
@@ -89,13 +85,9 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\admins::class,
         ],
-        'banks' => [
+        'traders' => [
             'driver' => 'eloquent',
-            'model' => App\Models\banks::class,
-        ],
-        'companies' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\companies::class,
+            'model' => App\Models\traders::class,
         ],
         'employees' => [
             'driver' => 'eloquent',
@@ -135,14 +127,14 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
-        'banks' => [
-            'provider' => 'admins',
+        'traders' => [
+            'provider' => 'traders',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,
         ],
-        'companies' => [
-            'provider' => 'admins',
+        'employees' => [
+            'provider' => 'employees',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,

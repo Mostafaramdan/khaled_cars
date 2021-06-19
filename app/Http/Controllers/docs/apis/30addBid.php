@@ -32,12 +32,6 @@ return
             ],
         ],
         [
-            'status'=>410,
-            'params'=>[
-                "message"=> "you have been paid insurances before, and Awaiting review ."
-            ],
-        ],
-        [
             'status'=>412,
             'params'=>[
                 "message"=> "you should pay insurance first ."
