@@ -27,6 +27,7 @@ use App\Models\services;
 use App\Models\sessions;
 use App\Models\stores;
 use App\Models\users;
+use App\Models\tokens;
 
 use Illuminate\Support\Facades\File;
 use Carbon\Carbon;
@@ -56,7 +57,7 @@ class generalHelp extends index
 		return "/".$folderPath.$path;
 	}
 	public static function uploadPhoto($image,$folderName){
-
+		
 		$folderPath="uploads/{$folderName}//";
 		if (!file_exists( $folderPath))
 					mkdir( $folderPath, 0777, true);
@@ -70,11 +71,18 @@ class generalHelp extends index
 		return	($session->created_at <= $now)?true:false;
 	}
 
-	public static function getAccount($api_token=null,$email=null,$phone=null,$tmpToken=null,$tmp_phone=null,$tmp_email=null){
+	public static function getAccount($api_token=null,$email=null,$phone=null,$tmpToken=null,$tmp_phone=null,$tmp_email=null)
+	{
 		$models=self::$providers;
 		if($api_token){
 			$key   = 'apiToken';
 			$value = $api_token;
+			$token = tokens::where('apiToken',self::$request->apiToken)->first();
+			if($token)
+				foreach($models as $model){
+					if($token->{Str::singular($model)})
+						return $token->{Str::singular($model)};
+				}
 		}
 		elseif($email){
 			$key   = 'email';
@@ -152,8 +160,13 @@ class generalHelp extends index
     {
 		$check=	Hash::check($password,$record->password)  ;
 		if($check){
-			$record->apiToken=self::UniqueRandomXChar(69,'apiToken');
-			$record->save();
+            $token = self::UniqueRandomXChar(69,'apiToken');
+            tokens::create([
+                'apiToken'=>$token,
+                $record->getTable().'_id'=>$record->id,
+                'created_at'=>date('Y-m-d H:i:s')
+            ]);
+            return $token;
 		}
 		return $check;
 	}

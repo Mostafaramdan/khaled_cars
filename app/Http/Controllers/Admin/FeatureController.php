@@ -10,10 +10,12 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
+use App\Http\Controllers\Apis\Helper\helper;
 
 class FeatureController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         if (str_contains(auth('admin')->user()->permissions, "show_feature") !== true)
         {
             abort('403','You don\'t have this permission');
@@ -74,25 +76,13 @@ class FeatureController extends Controller
             toastr()->error('يوجد بعض البيانات الخاطئة ، لم يتم إضافة الميزة.');
             return redirect()->route('features.index');
         }
-        $feature_image = new images();
-        if ($image = $request->file('image')) {
-            if ($feature_image->image != '') {
-                if (File::exists('assets/upload/feature_images/' . $feature_image->image)) {
-                    unlink('assets/upload/feature_images/' . $feature_image->image);
-                }
-            }
-            $filename =  Str::random(10).'.'.$image->getClientOriginalExtension();
-            $path = public_path("assets/upload/feature_images/" . $filename);
-            Image::make($image->getRealPath())->save($path, 100);
-            $feature_image->image       = $filename;
-        }
-        $feature_image->save();
 
         $feature = new features();
         $feature->name_ar             = $request->name_ar;
         $feature->name_en             = $request->name_en;
         $feature->is_active           = 1;
-        $feature->images_id           = $feature_image->id;
+        if($request->image)
+            $feature->images_id           = images::create(['image' => helper::uploadPhoto($request->image,'brands'),])->id;
         $feature->save();
 
 
@@ -117,7 +107,6 @@ class FeatureController extends Controller
             abort('403','You don\'t have this permission');
         }
         $feature = features::where('id', '=', $id)->first();
-        $feature_image = images::where('id','=',$feature->images_id)->first();
 
         $validate = Validator::make($request->all(), [
             'name_ar' => 'required',
@@ -130,19 +119,8 @@ class FeatureController extends Controller
             return redirect()->route('features.index');
         }
 
-        if ($image = $request->file('image')) {
-            if ($feature_image->image != '') {
-                if (File::exists('assets/upload/feature_images/' . $feature_image->image)) {
-                    unlink('assets/upload/feature_images/' . $feature_image->image);
-                }
-            }
-            $filename =  $feature_image->image;
-            $path = public_path("assets/upload/feature_images/" . $filename);
-            Image::make($image->getRealPath())->save($path, 100);
-            $feature_image->image       = $filename;
-
-        }
-        $feature_image->update();
+        if ($request->file('image')) 
+            images::where('id',$feature->images_id)->update(['image' => helper::uploadPhoto($request->image,'brands'),]);
         $feature->name_ar             = $request->name_ar;
         $feature->name_en             = $request->name_en;
         $feature->update();

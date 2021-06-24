@@ -14,14 +14,13 @@ class payInsuranceController extends index
     public static function api()
     {
         $insurance = insurances::where('users_id',self::$account->id)
-                            ->where('biddings_id',self::$request->bidId)
                             ->where('status','accept')
                             ->first();
-        if($insurance){
-            return [
-                'status'=>201
-            ];
-        }
+        // if($insurance){
+        //     return [
+        //         'status'=>201
+        //     ];
+        // }
 
         $path= helper::base64_image(self::$request->image,'images/insurance');
         $image=  images::create([
@@ -29,8 +28,9 @@ class payInsuranceController extends index
         ]);
         insurances::create([
            'images_id'=>$image->id,
-           'biddings_id'=>self::$request->bidId,
+           'insurances_slides_id'=>self::$request->insuranceSlideId,
            'users_id'=>self::$account->id,
+           'created_at'=>date('Y-m-d H:i:s'),
         ]);
 
         return [

@@ -13,7 +13,7 @@ class setMyLocationRules extends index
     public static function rules (){
 
         $rules=[
-            "apiToken"   =>"required|exists:users,apiToken",
+            "apiToken"   =>"required|",
             "location"     =>"required",
             "location.longitude"     =>"required",
             "location.latitude"     =>"required",

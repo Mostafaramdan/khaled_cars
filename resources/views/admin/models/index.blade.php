@@ -68,7 +68,7 @@
                             @forelse ($models as $key => $model)
                                 <tr>
                                     <td>{{ $model->model }}</td>
-                                    <td>{{ $model->brand->name_ar }}</td>
+                                    <td>{{ $model->brand->name_ar??'' }}</td>
                                     @if (str_contains(auth('admin')->user()->permissions, "delete_model") !== false || str_contains(auth('admin')->user()->permissions, "edit_model") !== false)
                                     <td>
                                         @if (str_contains(auth('admin')->user()->permissions, "edit_model") !== false)

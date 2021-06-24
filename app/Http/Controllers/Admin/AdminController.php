@@ -53,7 +53,7 @@ class AdminController extends Controller
             'phone'    =>   'required|numeric|between:10000000,999999999999999|unique:admins',
             'password' =>   'required',
         ]);
-
+        // dd($validate->errors());
         if ($validate->fails()) {
             toastr()->error('يوجد بعض البيانات الخاطئة ، لم يتم اضافة المدير.');
             return redirect()->route('admins.index');
@@ -63,8 +63,7 @@ class AdminController extends Controller
         $admin->email               = $request->email;
         $admin->phone               = $request->phone;
         $admin->is_active           = 1;
-        if($request->permissions !==null)
-        {
+        if($request->permissions !==null){
             $permissions = implode(',', $request->permissions);
             $admin->permissions         = $permissions;
         } elseif ($request->permissions == null){

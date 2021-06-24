@@ -214,12 +214,6 @@
                         </div>
                         <br>
                         <div>
-                            <label for="exampleInputEmail1">السعر : <span class="tx-danger">*</span> </label>
-                            <input type="text" class="form-control" id="price" name="price" required>
-                            @error('price')<span class="text-danger">{{ $message }}</span>@enderror
-                        </div>
-                        <br>
-                        <div>
                             <label for="exampleInputEmail1">الوصف بالعربية : <span class="tx-danger">*</span> </label>
                             <textarea type="text" class="form-control" id="description_ar" name="description_ar" required></textarea>
                             @error('description_ar')<span class="text-danger">{{ $message }}</span>@enderror
@@ -376,12 +370,6 @@
                                         @error('features')<span class="text-danger">{{ $message }}</span>@enderror
                                     </div>
                                 </div>
-                            </div>
-                            <br>
-                            <div>
-                                <label for="exampleInputEmail1">السعر : <span class="tx-danger">*</span> </label>
-                                <input type="text" class="form-control" id="price" name="price" required>
-                                @error('price')<span class="text-danger">{{ $message }}</span>@enderror
                             </div>
                             <br>
 
@@ -690,6 +678,7 @@
             @toastr_js
             @toastr_render
             <script>
+                
                 $('#modaldemo9').on('show.bs.modal', function(event) {
                     var button = $(event.relatedTarget)
                     var id = button.data('id')

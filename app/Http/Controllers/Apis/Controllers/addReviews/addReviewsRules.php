@@ -12,7 +12,7 @@ class addReviewsRules extends index
     public static function rules ()
     {
         $rules=[
-            "apiToken"   =>"required|exists:users,apiToken",
+            "apiToken"   =>"required|",
             "bidId"     =>"required|exists:biddings,id",
             "rate"      =>"required|numeric|min:0|max:5",
             "comment"      =>"required",

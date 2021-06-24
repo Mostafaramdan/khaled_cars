@@ -57,7 +57,7 @@
                             @foreach($bidding->product->GetImagesAttribute() as $value)
                                 <div class="carousel-item @if($loop->first) active @endif">
                                     <img class="d-block" style="width: 100%; height:500px;"
-                                         src="{{ asset('assets/upload/product_images/' . $value->image) }}">
+                                         src="{{ asset($value->image)}}">
                                 </div>
                             @endforeach
                         </div>

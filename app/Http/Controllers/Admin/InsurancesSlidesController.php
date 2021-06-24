@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
+use App\Http\Controllers\Apis\Helper\helper;
 
 class InsurancesSlidesController extends Controller
 {
@@ -58,27 +59,13 @@ class InsurancesSlidesController extends Controller
             'name_en'        => 'required',
             'description_ar' => 'required',
             'description_en' => 'required',
-            'image'          => 'required|mimes:png,jpg,jpeg',
+            'image'          => 'required|image',
         ]);
-
         if ($validate->fails()) {
+
             toastr()->error('يوجد بعض البيانات الخاطئة ، لم يتم إضافة الشريحة.');
             return redirect()->route('insurances_slides.index');
         }
-
-        $insurances_slides_image = new images();
-        if ($image = $request->file('image')) {
-            if ($insurances_slides_image->image != '') {
-                if (File::exists('assets/upload/insurances_slides/' . $insurances_slides_image->image)) {
-                    unlink('assets/upload/insurances_slides/' . $insurances_slides_image->image);
-                }
-            }
-            $filename =  Str::random(10).'.'.$image->getClientOriginalExtension();
-            $path = public_path("assets/upload/insurances_slides/" . $filename);
-            Image::make($image->getRealPath())->save($path, 100);
-            $insurances_slides_image->image       = $filename;
-        }
-        $insurances_slides_image->save();
 
         $insurances_slide = new insurances_slides();
         $insurances_slide->name_ar           = $request->name_ar;
@@ -87,7 +74,7 @@ class InsurancesSlidesController extends Controller
         $insurances_slide->description_en    = $request->description_en;
         $insurances_slide->price             = $request->price;
         $insurances_slide->total_biddings    = $request->total_biddings;
-        $insurances_slide->images_id         = $insurances_slides_image->id;
+        $insurances_slide->images_id         = images::create(['image'=>helper::uploadPhoto($request->image,'insurances_slides')])->id;
         $insurances_slide->save();
         toastr()->success('تم اضافة الشريحة بنجاح!');
         return redirect()->route('insurances_slides.index');
@@ -110,8 +97,6 @@ class InsurancesSlidesController extends Controller
         }
 
         $insurances_slide        = insurances_slides::where('id', '=', $id)->first();
-        $insurances_slides_image = images::where('id','=',$insurances_slide->images_id)->first();
-
         $validate = Validator::make($request->all(), [
             'price'          => 'required',
             'total_biddings' => 'required',
@@ -126,19 +111,11 @@ class InsurancesSlidesController extends Controller
             toastr()->error('يوجد بعض البيانات الخاطئة ، لم يتم تعديل الشريحة.');
             return redirect()->route('insurances_slides.index');
         }
-        if ($image = $request->file('image')) {
-            if ($insurances_slides_image->image != '') {
-                if (File::exists('assets/upload/insurances_slides/' . $insurances_slides_image->image)) {
-                    unlink('assets/upload/insurances_slides/' . $insurances_slides_image->image);
-                }
-            }
-            $filename =  $insurances_slides_image->image;
-            $path = public_path("assets/upload/insurances_slides/" . $filename);
-            Image::make($image->getRealPath())->save($path, 100);
-            $insurances_slides_image->image       = $filename;
-
+        if ($request->file('image')) {
+            $image = images::find($insurances_slide->id);
+            // !$image?:unlink($image->image)??'';
+            $image->update(['image'=>helper::uploadPhoto($request->image,'insurances_slides')]);
         }
-        $insurances_slides_image->update();
 
         $insurances_slide->price             = $request->price;
         $insurances_slide->total_biddings    = $request->total_biddings;

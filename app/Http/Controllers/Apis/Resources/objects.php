@@ -40,6 +40,16 @@ class objects extends index
         $object['lang'] = $record->lang;
         return $object;
     }
+    public static function trader ($record)
+    {
+        if($record == null  ) {return null;}
+        $object = [];
+        $object['id'] = $record->id;
+        $object['name'] = $record->name;
+        $object['email'] = $record->email;
+        $object['phone'] = $record->phone;
+        return $object;
+    }
 
     public static function userMin ($record)
     {
@@ -57,6 +67,8 @@ class objects extends index
         $object = [];
         $object['id'] = $record->id;
         $object['name']=$record['name_'.self::$lang];
+        $object['image']=self::image($record->image);
+
 
         return $object;
     }
@@ -83,7 +95,18 @@ class objects extends index
         $object['createdAt'] = $record->created_at;
         return $object;
     }
+    public static function insurances_slide ($record)
+    {
+        if($record == null  ) {return null;}
+        $object['id'] = $record->id;
+        $object['name']=$record->{'name_'.self::$lang};
+        $object['description']=$record->{'description_'.self::$lang};
+        !$record->image ?:$object['image'] = self::image($record->image);
+        $object['price'] = $record->price;
+        $object['totalBiddings'] = $record->total_biddings;
 
+        return $object;
+    }
     public static function info ($record)
     {
 
@@ -161,7 +184,21 @@ class objects extends index
         $object = [];
         $object['id'] = $record->id;
         $object['name'] = $record->{'name_'.self::$lang};
-        $object['image'] = Str::contains($record->image,'http') ? $record->image :Request()->root().$record->image;
+        $object['image'] = self::image($record->image);
+        return $object;
+    }
+    public static function model ($record)
+    {
+        $object = [];
+        $object['id'] = $record->id;
+        $object['model'] = $record->model;
+        return $object;
+    }
+    public static function model_year ($record)
+    {
+        $object = [];
+        $object['id'] = $record->id;
+        $object['modelYear'] = $record->model_year;
         return $object;
     }
 

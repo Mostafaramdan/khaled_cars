@@ -12,7 +12,11 @@ class getBidsController extends index
 {
     public static function api(){
 
-        $records=  biddings::doesntHave('orders')
+        $records=  biddings::where(function($q){ 
+                                return $q->whereHas('bidders',function($q){
+                                    return $q->doesntHave('orders');
+                                })->orwhereDoesntHave('bidders');   
+                            })
                            ->where('end_at','>',date('Y-m-d H:i:s'))
                            ->orderBy('id','DESC')
                            ->whereHas('product',function ($q){

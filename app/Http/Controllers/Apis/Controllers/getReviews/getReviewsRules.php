@@ -14,7 +14,7 @@ class getReviewsRules extends index
     {
 
         $rules=[
-            "apiToken"   =>"required|exists:users,apiToken",
+            "apiToken"   =>"required|",
             "bidId"     =>"required|exists:biddings,id",
             "page"      =>"required|numeric"
         ];

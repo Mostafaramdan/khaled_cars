@@ -13,7 +13,7 @@ class getMyFavoritesRules extends index
     public static function rules (){
 
         $rules=[
-            "apiToken"   =>"required|exists:users,apiToken",
+            "apiToken"   =>"required|",
             "brandId"     =>"exists:brands,id",
             "page"      =>"required|numeric"
         ];

@@ -13,7 +13,7 @@ class getAttachmentsRules extends index
     public static function rules (){
 
         $rules=[
-            "apiToken"   =>"required|exists:users,apiToken",
+            "apiToken"   =>"required|",
             "page"      =>"required|numeric"
         ];
 

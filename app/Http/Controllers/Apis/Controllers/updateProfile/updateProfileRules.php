@@ -14,7 +14,7 @@ class updateProfileRules extends index
     {
         $accountId= self::$account->id??null;
         $rules=[
-            "apiToken"  =>"required|exists:users,apiToken",
+            "apiToken"  =>"required|",
             "name"      =>"min:3|max:30",
             "image"     =>"nullable",
             "email"     =>"nullable|email|unique:users,email,". $accountId,

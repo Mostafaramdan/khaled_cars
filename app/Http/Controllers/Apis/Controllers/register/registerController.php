@@ -7,6 +7,7 @@ use App\Http\Controllers\Apis\Controllers\index;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\sessions;
+use App\Models\tokens;
 use App\Models\users;
 
 /**
@@ -37,6 +38,13 @@ class registerController extends index
                 'code'=>12345
             ]);
         // helper::sendSms( $record->phone, $session->code );
+        $token = helper::UniqueRandomXChar(69,'apiToken');
+        tokens::create([
+            'apiToken'=>$token,
+            $record->getTable().'_id'=>$record->id,
+            'created_at'=>date('Y-m-d H:i:s')
+        ]);
+        $record['apiToken']=$token;
         return [
             'status'=>200,
             'message'=>self::$messages['register']["200"],

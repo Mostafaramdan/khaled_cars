@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
+use App\Http\Controllers\Apis\Helper\helper;
 
 class BiddingController extends Controller
 {
@@ -185,7 +186,6 @@ class BiddingController extends Controller
                 'model_years_id' => 'nullable',
                 'status' => 'required',
                 'images' => 'nullable',
-                'price' => 'required',
                 'brands_id' => 'required',
                 'description_ar' => 'nullable',
                 'description_en' => 'nullable',
@@ -205,7 +205,6 @@ class BiddingController extends Controller
                 'models_id' => 'nullable',
                 'model_years_id' => 'nullable',
                 'status' => 'required',
-                'price' => 'required',
                 'brands_id' => 'required',
                 'description_ar' => 'nullable',
                 'description_en' => 'nullable',
@@ -223,12 +222,11 @@ class BiddingController extends Controller
             $images = $request->file('images');
             $i = [];
             foreach ($images as $image) {
-                $filename = Str::random(10) . '.' . $image->getClientOriginalExtension();
-                $path = public_path("assets/upload/product_images/" . $filename);
-                Image::make($image->getRealPath())->save($path, 100);
-
+                // $filename = Str::random(10) . '.' . $image->getClientOriginalExtension();
+                // $path = public_path("assets/upload/product_images/" . $filename);
+                // Image::make($image->getRealPath())->save($path, 100);
                 $images_id = images::create([
-                    'image' => $filename,
+                    'image' => helper::uploadPhoto($image,'biddings'),
                 ]);
                 array_push($i, $images_id->id);
             }
@@ -245,7 +243,7 @@ class BiddingController extends Controller
         }
         $product->models_id = $request->models_id;
         $product->features = $request->features;
-        $product->price = $request->price;
+        $product->price = $request->min_auction;
         $product->status = $request->status;
         $product->model_years_id = $request->model_years_id;
         $product->description_ar = $request->description_ar;

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
+use App\Http\Controllers\Apis\Helper\helper;
 
 class BrandController extends Controller
 {
@@ -51,31 +52,22 @@ class BrandController extends Controller
         $validate = Validator::make($request->all(), [
             'name_ar' => 'required',
             'name_en' => 'required',
-            'image'   => 'nullable|mimes:png,jpg,jpeg',
+            'image'   => 'required|mimes:png,jpg,jpeg',
         ]);
 
         if ($validate->fails()) {
             toastr()->error('يوجد بعض البيانات الخاطئة ، لم يتم إضافة العلامة التجارية.');
             return redirect()->route('brands.index');
         }
-        $brand_image = new images();
-        if ($image = $request->file('image')) {
-            if ($brand_image->image != '') {
-                if (File::exists('assets/upload/brand_images/' . $brand_image->image)) {
-                    unlink('assets/upload/brand_images/' . $brand_image->image);
-                }
-            }
-            $filename =  Str::random(10).'.'.$image->getClientOriginalExtension();
-            $path = public_path("assets/upload/brand_images/" . $filename);
-            Image::make($image->getRealPath())->save($path, 100);
-            $brand_image->image       = $filename;
-        }
-        $brand_image->save();
+        if ($image=$request->file('image')) 
+            $images_id = images::create([
+                'image' => helper::uploadPhoto($image,'brands'),
+            ])->id;
 
         $brand = new brands();
         $brand->name_ar             = $request->name_ar;
         $brand->name_en             = $request->name_en;
-        $brand->images_id           = $brand_image->id;
+        $brand->images_id           = $images_id??null;
         $brand->save();
 
 
@@ -100,12 +92,11 @@ class BrandController extends Controller
             abort('403','You don\'t have this permission');
         }
         $brand = brands::where('id', '=', $id)->first();
-        $brand_image = images::where('id','=',$brand->images_id)->first();
 
         $validate = Validator::make($request->all(), [
             'name_ar' => 'required',
             'name_en' => 'required',
-            'image'   => 'nullable|mimes:png,jpg,jpeg',
+            'image'   => 'mimes:png,jpg,jpeg',
         ]);
 
         if ($validate->fails()) {
@@ -113,19 +104,10 @@ class BrandController extends Controller
             return redirect()->route('brands.index');
         }
 
-        if ($image = $request->file('image')) {
-            if ($brand_image->image != '') {
-                if (File::exists('assets/upload/brand_images/' . $brand_image->image)) {
-                    unlink('assets/upload/brand_images/' . $brand_image->image);
-                }
-            }
-            $filename =  $brand_image->image;
-            $path = public_path("assets/upload/brand_images/" . $filename);
-            Image::make($image->getRealPath())->save($path, 100);
-            $brand_image->image       = $filename;
-
-        }
-        $brand_image->update();
+        if ($image=$request->file('image')) 
+            $images_id = images::where('id',$brand->images_id)->update([
+                'image' => helper::uploadPhoto($image,'brands'),
+            ]);
         $brand->name_ar             = $request->name_ar;
         $brand->name_en             = $request->name_en;
         $brand->update();

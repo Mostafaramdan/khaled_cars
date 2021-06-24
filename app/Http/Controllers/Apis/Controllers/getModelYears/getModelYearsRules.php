@@ -13,7 +13,7 @@ class getModelYearsRules extends index
     public static function rules (){
 
         $rules=[
-            "apiToken"   =>"required|exists:users,apiToken",
+            "apiToken"   =>"required|",
             "brandId"     =>"required|exists:brands,id",
         ];
 

@@ -13,7 +13,7 @@ class getOrdersRules extends index
     public static function rules (){
 
         $rules=[
-            "apiToken"   =>"required|exists:users,apiToken",
+            "apiToken"   =>"required|",
             'status' =>'array',
             "page"      =>"required|numeric"
         ];

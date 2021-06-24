@@ -13,7 +13,7 @@ class testSocketRules extends index
     public static function rules (){
         
         $rules=[
-            "apiToken"   =>"required|exists:users,apiToken",
+            "apiToken"   =>"required|",
             "userId"     =>"required|exists:users,id",
             "page"      =>"required|numeric"
         ];

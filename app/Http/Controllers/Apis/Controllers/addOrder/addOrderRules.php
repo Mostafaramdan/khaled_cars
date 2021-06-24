@@ -13,7 +13,7 @@ class addOrderRules extends index
     public static function rules (){
 
         $rules=[
-            "apiToken"   =>"required|exists:users,apiToken",
+            "apiToken"   =>"required|",
             "housingUnitsIds"     =>"required|array",
             "housingUnitsIds.*"     =>"exists:housing_units,id",
             "price"      =>"required|numeric",

@@ -12,21 +12,15 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-/**
- *
- *
- * APIs for register
- */
-
 class index extends Controller
 {
     public static   $account,$request,$secondAccount,$isSendMessage=false,$itemPerPage=20,
-                    $className,$classRules,$lang,$providers=['admins','users'],$messages,$messagesAll;
+                    $className,$classRules,$lang,$providers=['users'],$messages,$messagesAll;
 
-    function __construct(Request $request){
-
+    public static function index(Request $request)
+    {
         if($request->has('phone'))
-            $request->offsetSet('phone',Str::replaceFirst('+', '00',$request->phone ));
+        $request->offsetSet('phone',Str::replaceFirst('+', '00',$request->phone ));
 
         self::$request=$request;
         self::setAccount($request);
@@ -37,10 +31,7 @@ class index extends Controller
         $messages=include "lang.php";
         self::$messages=$messages[self::$lang];
         self::$messagesAll=$messages;
-    }
 
-    public static function index()
-    {
         $rules = self::$classRules::rules();
         if($rules)
             return response()->json( $rules );

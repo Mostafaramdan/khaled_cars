@@ -13,9 +13,9 @@ class payInsuranceRules extends index
     public static function rules (){
 
         $rules=[
-            "apiToken"   =>"required|exists:users,apiToken",
+            "apiToken"   =>"required|",
             'image'    =>'required|string',
-            "bidId"     =>"required|exists:biddings,id",
+            "insuranceSlideId"     =>"required|exists:insurances_slides,id",
         ];
 
         $messages=[
@@ -24,8 +24,8 @@ class payInsuranceRules extends index
 
             "image.required"       =>400,
 
-            "bidId.required"       =>400,
-            "bidId.exists"         =>405,
+            "insuranceSlideId.required"       =>400,
+            "insuranceSlideId.exists"         =>405,
 
         ];
 
@@ -33,8 +33,8 @@ class payInsuranceRules extends index
             "apiToken.required"     =>"يجب ادخال التوكن",
             "apiToken.exists"       =>"هذا التوكن غير موجود",
 
-            "bidId.exists"         =>"رقم المزايدة غير موجود",
-            "bidId.required"       =>"يجب ادخال رقم المزايدة",
+            "insuranceSlideId.exists"         =>"رقم الشريحة غير موجود",
+            "insuranceSlideId.required"       =>"يجب ادخال رقم الشريحة",
 
             "image.required"       =>"يجب ادخال الصورة ",
 

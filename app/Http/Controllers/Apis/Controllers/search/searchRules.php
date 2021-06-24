@@ -13,7 +13,7 @@ class searchRules extends index
     public static function rules (){
 
         $rules=[
-            "apiToken"              =>"required|exists:users,apiToken",
+            "apiToken"              =>"required|",
             'price'                 =>'array',
             'price.start'           =>'required_with:price',
             'price.end'             =>'required_with:price',

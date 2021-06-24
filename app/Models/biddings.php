@@ -9,7 +9,7 @@ class biddings extends Model
 {
     use HasFactory;
     protected $table = 'biddings';
-    public $timestamps = false;
+    public $timestamps = false,$appends=['max_auction'];
     protected $fillable = [
         'products_id',
         'Insurance',
@@ -35,6 +35,7 @@ class biddings extends Model
     {
         return $this->hasMany(reviews::class,'biddings_id');
     }
+    
 
     function bidders()
     {
@@ -44,6 +45,10 @@ class biddings extends Model
     public function favourites()
     {
         return $this->hasMany(favourites::class,'biddings_id');
+    }
+    function GetMaxAuctionAttribute()
+    {
+        return $this->bidders->max('price');
     }
 
 }

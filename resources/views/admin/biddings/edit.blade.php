@@ -89,12 +89,6 @@
                                     </div>
                                 </div>
                                 <br>
-                                <div>
-                                    <label for="exampleInputEmail1">السعر : <span class="tx-danger">*</span> </label>
-                                    <input type="text" value="{{old('price',$bidding->product->price)}}" class="form-control" id="price" name="price" required>
-                                    @error('price')<span class="text-danger">{{ $message }}</span>@enderror
-                                </div>
-                                <br>
 
                                 <div>
                                     <label for="exampleInputEmail1">الوصف بالعربية : <span class="tx-danger">*</span> </label>

@@ -68,7 +68,7 @@
                             @forelse ($model_years as $key => $model_year)
                                 <tr>
                                     <td>{{ $model_year->model_year }}</td>
-                                    <td>{{ $model_year->brand->name_ar }}</td>
+                                    <td>{{ $model_year->brand->name_ar??'' }}</td>
                                     @if (str_contains(auth('admin')->user()->permissions, "delete_model_year") !== false || str_contains(auth('admin')->user()->permissions, "edit_model_year") !== false)
                                     <td>
                                         @if (str_contains(auth('admin')->user()->permissions, "edit_model_year") !== false)

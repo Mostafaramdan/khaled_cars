@@ -14,7 +14,7 @@ class addBidRules extends index
     {
 
         $rules=[
-            "apiToken"   =>"required|exists:users,apiToken",
+            "apiToken"   =>"required|",
             'price'    =>'required',
             "bidId"     =>"required|exists:biddings,id",
         ];
