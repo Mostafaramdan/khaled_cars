@@ -34,7 +34,7 @@ class objects extends index
         $object['id'] = $record->id;
         $object['name'] = $record->name;
         $record->currency ? $object['currency'] = self::currency($record->currency) : null ;
-        $record->image?$object['image'] =Request()->root().$record->image:$object['image'] =null;
+        $record->image?$object['image'] =Request()->root().$record->image:null;
         $object['email'] = $record->email;
         $object['phone'] = $record->phone;
         $object['lang'] = $record->lang;
@@ -48,6 +48,7 @@ class objects extends index
         $object['name'] = $record->name;
         $object['email'] = $record->email;
         $object['phone'] = $record->phone;
+        !$record->image ?:$object['image']=self::image($record->image);
         return $object;
     }
 
@@ -57,7 +58,7 @@ class objects extends index
         $object = [];
         $object['id'] = $record->id;
         $object['name'] = $record->name;
-        $record->image?$object['image'] =Request()->root().$record->image:$object['image'] =null;
+        $record->image?$object['image'] =Request()->root().$record->image:null;
         return $object;
     }
 
@@ -67,7 +68,7 @@ class objects extends index
         $object = [];
         $object['id'] = $record->id;
         $object['name']=$record['name_'.self::$lang];
-        $object['image']=self::image($record->image);
+        !$record->image ?:$object['image']=self::image($record->image);
 
 
         return $object;
@@ -88,6 +89,7 @@ class objects extends index
         // this object take record from notify table ;
         if($record == null  ) {return null;}
         $object['id'] = $record->id;
+        if($record->notification->biddings_id)$object['bidId'] = $record->notification->biddings_id;
         $object['type'] = $record->notification->type;
         $object['content']=$record->notification['content_'.self::$lang];
         $record->orders? $object['order'] = self::order($record->orders):false;
@@ -161,11 +163,11 @@ class objects extends index
         $object['id'] = $record->id;
         $object['name'] = $record->{'name_'.self::$lang};
         $object['description'] = $record->{'description_'.self::$lang};
-        $object['price'] = $record->price;
+        $object['price'] = $record->price +  ($record->price*($record->biddings->first()->fees/100)) ;
         $object['features'] = self::ArrayOfObjects($record->features??[],'feature');
         $object['images'] = self::ArrayOfObjects($record->images??[],'image');
         $object['model'] = $record->model;
-        $object['status'] = $record->status;
+        $object['status'] = (string) self::$messages[$record->status];
         $object['model'] = $record->model;
         $object['modelYear'] = $record->model_year;
         $object['brand'] = self::brand($record->brand);
@@ -174,6 +176,7 @@ class objects extends index
 
     public static function image ($record)
     {
+        if(!$record) return null;
         $object = [];
         $object['id'] = $record->id;
         $object['image'] = Str::contains($record->image,'http') ? $record->image :Request()->root().$record->image;
@@ -184,7 +187,7 @@ class objects extends index
         $object = [];
         $object['id'] = $record->id;
         $object['name'] = $record->{'name_'.self::$lang};
-        $object['image'] = self::image($record->image);
+        !$record->image?:$object['image'] = self::image($record->image);
         return $object;
     }
     public static function model ($record)
@@ -227,10 +230,11 @@ class objects extends index
         $object['type'] = $record->type;
         $object['minAuction'] = $record->min_auction;
         $object['Insurance'] = (double)$record->Insurance;
-        $object['isFav'] = favourites::where('users_id',self::$account->id)->where('biddings_id',$record->id)->count()?true: false;;
+        $object['isFav'] = favourites::where('users_id',self::$account->id??'')->where('biddings_id',$record->id)->count()?true: false;
         $object['biddersCount'] = bidders::where('biddings_id',$record->id)->count();
         $object['product']  = self::product($record->product);
         $object['bidders']  = self::ArrayOfObjects($record->bidders, 'bidder');
+        $object['maxBid']  = !$record->bidders?0:(float)$record->bidders->max('price');
         $object['rate'] = self::rate($record);
         return $object;
     }
@@ -240,11 +244,11 @@ class objects extends index
         // accept bid object
         $object = [];
         $object['totalRate'] =round( $record->reviews->avg('rate') , 2);
-        $object['5'] =round( $record->reviews->whereBetween('rate',[4.1,5])->count() , 2);
-        $object['4'] =round($record->reviews->whereBetween('rate',[3.1,4])->count() , 2);
-        $object['3'] =round($record->reviews->whereBetween('rate',[2.1,3])->count() , 2);
-        $object['2'] =round($record->reviews->whereBetween('rate',[1.1,2])->count() , 2);
-        $object['1'] =round($record->reviews->whereBetween('rate',[0,1])->count() , 2);
+        $object['five'] =round( $record->reviews->whereBetween('rate',[4.1,5])->count() , 2);
+        $object['four'] =round($record->reviews->whereBetween('rate',[3.1,4])->count() , 2);
+        $object['three'] =round($record->reviews->whereBetween('rate',[2.1,3])->count() , 2);
+        $object['two'] =round($record->reviews->whereBetween('rate',[1.1,2])->count() , 2);
+        $object['one'] =round($record->reviews->whereBetween('rate',[0,1])->count() , 2);
 
         return $object;
     }
@@ -255,6 +259,7 @@ class objects extends index
         $object['id'] = (double)$record->id;
         $object['user']  = self::user($record->user);
         $object['price']  = $record->price;
+        $object['createdAt'] = (double) strtotime($record->created_at);
 
         return $object;
     }

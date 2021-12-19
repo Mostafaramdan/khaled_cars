@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\traders;
+use App\Models\biddings;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -20,7 +21,7 @@ class TraderController extends Controller
         $limit_by = (isset(\request()->limit_by) && \request()->limit_by != '') ? \request()->limit_by : self::$itemPerPage;
         $type = (isset(\request()->type) && \request()->type != '') ? \request()->type : null;
 
-        $traders = traders::where('id', '!=', null);
+        $traders = traders::where('id', '>', 1);
         if ($keyword != null) {
             if ($type == null) {
                 $traders = traders::where('name', 'LIKE', "%{$keyword}%")
@@ -44,6 +45,10 @@ class TraderController extends Controller
         {
             abort('403','You don\'t have this permission');
         }
+        // if(biddings::where('traders_id',$request->id)->count()){
+        //     biddings::where('traders_id',$request->id)->update(['traders_id'=>1]);
+        // }
+
         $trader = traders::findOrFail($request->id);
         $trader->delete();
         toastr()->success('تم حذف التاجر بنجاح');

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class products extends Model
 {
     use HasFactory;
-    protected $table = 'products' , $appends=['images','features'];
+    protected $table = 'products' , $appends=['images','features','status_ar'];
 
     public $timestamps = false;
 
@@ -68,5 +68,8 @@ class products extends Model
     {
         $this->attributes['images'] = json_encode($value);
     }
-
+    function GetStatusArAttribute()
+    {
+        
+    }
 }

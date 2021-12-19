@@ -14,7 +14,7 @@ class searchController extends index
     public static  $records;
     public static function api()
     {
-        self::$records=  biddings::query();
+        self::$records=  biddings::query('has_order','!=',1)->whereHas('trader');
         self::$request->search? self::$records = self::search() :null;//search
         self::$request->brandId? self::$records = self::filterByBrand() :null;// filter by brand
         self::$request->productPrice? self::$records = self::filterByPrice() :null;// filter by price
@@ -23,6 +23,7 @@ class searchController extends index
         self::$request->model? self::$records = self::filterByModel() :null;// filter by model of car
         self::$request->modelYear? self::$records = self::filterByModelYear() :null;// filter by model'year of car
         self::$request->carStatus? self::$records = self::filterByCarStatus() :null;// filter by status of cars
+        self::$request->traderId? self::$records = self::filterBytraderId() :null;// filter by status of cars
         self::$request->type? self::$records = self::filterByType() :null;// filter by status of cars
         self::$records = self::sort() ;// sort by and sort type
 
@@ -31,10 +32,12 @@ class searchController extends index
             "status"=>$response[1],
             "totalPages"=>$response[0],
             "bids"=>objects::ArrayOfObjects(self::$records,"bid"),
-
         ];
     }
-
+    public static function filterBytraderId()
+    {
+        return self::$records->where('traders_id',self::$request->traderId);
+    }
     public static function search()
     {
         $search = self::$request->search;
@@ -55,14 +58,18 @@ class searchController extends index
     }
     public static function filterByModel()
     {
-        return self::$records->whereHas('product', function ($query)  {
-            $query->where('model',self::$request->model );
+        return self::$records->whereHas('product', function ($q)  {
+            return $q->whereHas('model',function($q){
+                $q->where('model',self::$request->model );
+            });
         });
     }
     public static function filterByModelYear()
     {
-        return self::$records->whereHas('product', function ($query)  {
-            $query->where('model_year',self::$request->modelYear );
+        return self::$records->whereHas('product', function ($q)  {
+            return $q->whereHas('model_year',function($q){
+                return $q->where('model_year',self::$request->model );
+            });
         });
     }
     public static function filterByCarStatus()
@@ -108,9 +115,11 @@ class searchController extends index
                     }])
                     ->orderBy('average_rating',self::$request->sortType??"DESC");
 
-        }elseif(self::$request->sortBy=='productPrice')
+        }
+        elseif(self::$request->sortBy=='productPrice')
             return self::$records->join('products',  'products.id','=', 'biddings.products_id')
-                ->orderBy('products.price', self::$request->sortType??"DESC");
+                ->orderBy('products.price', self::$request->sortType??"DESC")
+                ->select('biddings.*');
         else
             return self::$records->orderBy('id', self::$request->sortType??"DESC");
 

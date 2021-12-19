@@ -34,10 +34,10 @@ class registerController extends index
         ]);
         $session = sessions::createUpdate([
                 $record->getTable().'_id' =>$record->id,
-                // 'code'=>helper::RandomXDigits(5)
-                'code'=>12345
+                'code'=>helper::RandomXDigits(5)
+                // 'code'=>12345
             ]);
-        // helper::sendSms( $record->phone, $session->code );
+        helper::sendSms( $record->phone, $session->code );
         $token = helper::UniqueRandomXChar(69,'apiToken');
         tokens::create([
             'apiToken'=>$token,

@@ -35,6 +35,15 @@
                 </select>
             </div>
         </div>
+        <div class="col-2">
+            <div class="form-group">
+                <select class="form-control"  name="status" id="status">
+                    <option value=""     @if (old('type', request()->input('status')) == '')    SELECTED @endif>الحالة</option>
+                    <option value="open"   @if (old('status', request()->input('status')) == 'open')  SELECTED @endif >مازالت تعمل</option>
+                    <option value="close"   @if (old('status', request()->input('status')) == 'finished')  SELECTED @endif >انتهت</option>
+                </select>
+            </div>
+        </div>
         <div class="col-1">
             <div class="form-group">
                 <button type="submit" class="btn btn-success">ابحث</button>

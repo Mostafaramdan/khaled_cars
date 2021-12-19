@@ -42,11 +42,9 @@
                         </div>
                     </div>
                     <br>
-                    <br>
                     @if($bidding->product->images !== null)
                     <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
                         <ol class="carousel-indicators">
-
                             @foreach($bidding->product->GetImagesAttribute() as $value)
                                 <li data-target="#carouselExampleIndicators" data-slide-to="{{$loop->index}}"
                                     @if($loop->first) class="active" @endif></li>
@@ -114,6 +112,7 @@
                             @elseif($bidding->product->status == 'damage')
                                 <td> محطم</td>
                             @endif
+
                         </tr>
                         <br>
                         <tr>
@@ -141,6 +140,17 @@
                                     - {{ $value->name_ar }}
                                 @endforeach
                             </td>
+                            <th>نوع السيارة</th>
+                            @if($bidding->product->car_type == 'sedan')
+                                <td> سيدان</td>
+                            @elseif($bidding->product->car_type == 'Jeep')
+                                <td> جيب</td>
+                            @elseif($bidding->product->car_type == 'hatchback')
+                                <td> هاتشباك</td>
+                            @elseif($bidding->product->car_type == 'Pick-Up')
+                                <td> بكب  </td>
+                            @endif
+
                         </tr>
                         <tr>
 

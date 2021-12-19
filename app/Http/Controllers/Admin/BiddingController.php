@@ -9,7 +9,10 @@ use App\Models\images;
 use App\Models\model_years;
 use App\Models\models;
 use App\Models\products;
+use App\Models\users;
+use App\Models\orders;
 use App\Models\traders;
+use App\Models\app_settings;
 use Illuminate\Http\Request;
 use App\Models\biddings;
 use Illuminate\Support\Facades\File;
@@ -17,6 +20,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 use App\Http\Controllers\Apis\Helper\helper;
+use Mail;
 
 class BiddingController extends Controller
 {
@@ -24,8 +28,8 @@ class BiddingController extends Controller
     {
         $keyword = (isset(\request()->keyword) && \request()->keyword != '') ? \request()->keyword : null;
         $type = (isset(\request()->type) && \request()->type != '') ? \request()->type : null;
-        $sort_by = (isset(\request()->sort_by) && \request()->sort_by != '') ? \request()->sort_by : 'end_at';
-        $order_by = (isset(\request()->order_by) && \request()->order_by != '') ? \request()->order_by : 'desc';
+        $sort_by = \request()->sort_by??'id';
+        $order_by = \request()->order_by?? 'desc';
         $limit_by = (isset(\request()->limit_by) && \request()->limit_by != '') ? \request()->limit_by : self::$itemPerPage;
         $brands = brands::all(['id', 'name_ar']);
         $model_years = model_years::all(['id', 'model_year']);
@@ -66,6 +70,10 @@ class BiddingController extends Controller
             if ($type != null && $keyword == null) {
                 $biddings = biddings::with(['product', 'trader'])
                     ->where('type', '=', $type);
+            }
+            if(\request()->status){
+                $eq = \request()->status == 'open' ? '>' : '<=';
+                $biddings->where('end_at',$eq,date('Y-m-d H:i:s'));
             }
             $biddings = $biddings->orderBy($sort_by, $order_by);
             $biddings = $biddings->paginate($limit_by);
@@ -180,8 +188,8 @@ class BiddingController extends Controller
                 'end_at' => 'required',
 
                 //Product
-                'name_ar' => 'required',
-                'name_en' => 'required',
+                // 'name_ar' => 'required',
+                // 'name_en' => 'required',
                 'models_id' => 'nullable',
                 'model_years_id' => 'nullable',
                 'status' => 'required',
@@ -196,12 +204,13 @@ class BiddingController extends Controller
                 //Bidding
                 //'Insurance' => 'required|numeric',
                 'min_auction' => 'required|numeric',
+                'initial_auction' => 'required|numeric',
                 'type' => 'required',
                 'end_at' => 'required',
 
                 //Product
-                'name_ar' => 'required',
-                'name_en' => 'required',
+                // 'name_ar' => 'required',
+                // 'name_en' => 'required',
                 'models_id' => 'nullable',
                 'model_years_id' => 'nullable',
                 'status' => 'required',
@@ -214,6 +223,7 @@ class BiddingController extends Controller
         }
 
         if ($validate->fails()) {
+            // dd($validate->errors());
             toastr()->error('يوجد بعض البيانات الخاطئة ، لم يتم اضافة المزاد.');
             return redirect()->route('biddings.index');
         }
@@ -243,26 +253,30 @@ class BiddingController extends Controller
         }
         $product->models_id = $request->models_id;
         $product->features = $request->features;
-        $product->price = $request->min_auction;
+        $product->price = $request->initial_auction;
         $product->status = $request->status;
         $product->model_years_id = $request->model_years_id;
         $product->description_ar = $request->description_ar;
         $product->description_en = $request->description_en;
+        $product->car_type = $request->car_type;
         $product->save();
 
         $bidding = new biddings();
         $bidding->products_id = $product->id;
         $bidding->Insurance = 0;
         $bidding->min_auction = $request->min_auction;
+        $bidding->fees = $request->fees;
+        $bidding->initial_auction = $request->initial_auction;
         $bidding->type = $request->type;
-        if (auth('admin')->check()) {
-            $bidding->traders_id = $request->traders_id;
-        } elseif (auth('trader')->check()) {
-            $bidding->traders_id = auth('trader')->user()->id;
-        }
+        $bidding->traders_id = $request->traders_id;
+        
 
         $bidding->end_at = $request->end_at;
         $bidding->save();
+        $users = users::where('fireBaseToken','!=',null)->where('is_active',1)->get();
+        $model_ar= $product->brand->name_ar . ' '  .$product->model_year->model_year;
+        $model_en= $product->brand->name_en . ' '  .$product->model_year->model_year;
+        helper::newNotify($users,"تم اضافة مزاد جديد سيارة {$model_ar}" , "A new auction has been added , {$model_en}",null,$bidding->id);
         toastr()->success('تم اضافة المزاد بنجاح!');
         return redirect()->route('biddings.index');
     }
@@ -321,23 +335,24 @@ class BiddingController extends Controller
         $validate = Validator::make($request->all(), [
             //'Insurance' => 'required|numeric',
             'min_auction' => 'required|numeric',
+            'initial_auction' => 'required|numeric',
             'type' => 'required',
-            'traders_id' => 'nullable',
+            // 'traders_id' => 'nullable',
             'end_at' => 'nullable',
 
             //Product
-            'name_ar' => 'required',
-            'name_en' => 'required',
+            // 'name_ar' => 'required',
+            // 'name_en' => 'required',
             'models_id' => 'nullable',
             'model_years_id' => 'nullable',
             'status' => 'required',
-            'price' => 'required',
+            // 'price' => 'required',
             'brands_id' => 'nullable',
             'description_ar' => 'nullable',
             'description_en' => 'nullable',
             'features' => 'nullable',
         ]);
-
+            // dd($validate->errors());
         if ($validate->fails()) {
             toastr()->error('يوجد بعض البيانات الخاطئة ، لم يتم تعديل المزاد.');
             return redirect()->route('biddings.index');
@@ -351,7 +366,7 @@ class BiddingController extends Controller
         if ($request->models_id !== null) {
             $product->models_id = $request->models_id;
         }
-        $product->price = $request->price;
+        $product->price = $request->initial_auction;
         $product->status = $request->status;
         if ($request->features !== null) {
             $product->features = $request->features;
@@ -361,18 +376,29 @@ class BiddingController extends Controller
         }
         $product->description_ar = $request->description_ar;
         $product->description_en = $request->description_en;
+        $product->car_type = $request->car_type;
         $product->update();
 
         $bidding->Insurance = 0;
         $bidding->min_auction = $request->min_auction;
+        $bidding->fees = $request->fees;
+        $bidding->initial_auction = $request->initial_auction;
+
         $bidding->type = $request->type;
         if (auth('admin')->check()) {
             if ($request->traders_id !== null) {
                 $bidding->traders_id = $request->traders_id;
             }
         }
-        if ($request->end_at !== null) {
+        if ($request->end_at !== null ) {
             $bidding->end_at = $request->end_at;
+        }
+        if ($request->end_at !== null && $request->end_at > date('Y-m-d H:i:s')) {
+            $bidding->has_order = 0;
+            $users = users::where('fireBaseToken','!=',null)->where('is_active',1)->get();
+            $model_ar= $product->brand->name_ar . ' '  .$product->model_year->model_year;
+            $model_en= $product->brand->name_en . ' '  .$product->model_year->model_year;
+            helper::newNotify($users,"تم إعادة فتح المزاد مرة اخري سيارة   {$model_ar}" , "The auction has reopened again! at car  {$model_en}",null,$bidding->id);
         }
         $bidding->update();
 
@@ -390,5 +416,35 @@ class BiddingController extends Controller
     {
         $models_id = model_years::where("brands_id", $id)->pluck("model_year", "id");
         return json_encode($models_id);
+    }
+    public function confirm(biddings $bidding)
+    {
+
+        if($bidding->bidders->count() == 0){
+            return response()->json(['status'=>409]);
+        }
+        if($bidding->has_order){
+            return response()->json(['status'=>410]);
+        }
+        $bidding->has_order = 1;
+        $bidding->end_at = date('Y-m-d H:i:s');
+        $bidding->save();
+        $bidder = $bidding->bidders->last();
+
+        $order = orders::create([
+            'has_order'=>1,
+            'price'=>$bidding->bidders->max('price'),
+            'bidders_id'=>$bidder->id,
+            'fees'=>app_settings::first()->fees,
+            'total'=>$bidder->price +app_settings::first()->fees/100 * $bidder->price ,
+            'created_at'=>date('Y-m-d H:i:s'),
+            'pdf'=>helper::UniqueRandomXChar(69,'pdf')
+        ]);
+        $content_ar =" مبروك ! تم الموافقة علي بيع السيارة {$bidder->bidding->product->brand->name_ar} بقيمة {$bidder->price} ";
+        $content_en ="Congratulations ! Car sale approved with price  {$bidder->price} at {$bidder->bidding->product->brand->name_en}";
+        helper::newNotify([$bidder->user], $content_ar , $content_en,null,$bidding->id);
+        Mail::to($order->bidder->user->email)->send(new \App\Mail\OrderShipped($order));
+        return response()->json(['status'=>200]);
+
     }
 }

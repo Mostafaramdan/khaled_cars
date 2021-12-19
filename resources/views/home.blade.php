@@ -77,6 +77,6 @@
 
 <!-- Global Init -->
 <script src="{{asset('landing_sources/assets/js/custom.js')}}"></script>
-
+<script src="{{asset('/js/app.js')}}"></script>
 </body>
 </html>

@@ -1,16 +1,16 @@
 <?php
 
 namespace App\Http\Controllers\Apis\Helper;
- use Illuminate\Http\Request;
+
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Apis\Controllers\index;
 use App\Models\admins;
 use App\Models\app_settings;
 use App\Models\notifications;
-use App\Models\notify_users as notify;
+use App\Models\notify as notify;
 use App\Models\sessions;
 use Illuminate\Support\Str;
-
 use Carbon\Carbon;
 use Hash;
 use Validator;
@@ -18,7 +18,8 @@ use DB;
 
 class helper extends generalHelp
 {
-	public static function validateAccount(){
+	public static function validateAccount()
+	{
 		if(self::$account == null ){
 			if(self::$request->has('phone')){
 				$code=415;
@@ -48,25 +49,25 @@ class helper extends generalHelp
 		];
 	}
 
-	public static function newNotify($targets,$message_ar,$message_en,$orderId=null,$type=null,$productId=null,$categoryId=null,$notificationId=null){
+	public static function newNotify($targets,$message_ar,$message_en,$orderId=null,$biddings_id=null,$type=null,$notificationId=null)
+	{
 		if(!$notificationId){
-			$notification   =   notifications::createUpdate([
+			$notification   =   notifications::create([
 									'content_ar'=>$message_ar,
 									'content_en'=>$message_en,
 									'type'    =>$type,
 									'orders_id'    =>$orderId,
-									'products_id'    =>$productId,
-									'categories_id'    =>$categoryId
+									'biddings_id'    =>$biddings_id,
+									'created_at'    =>date('Y-m-d H:i:s'),
 									]);
 		}
 		foreach($targets as $user){
 			$notify =   notify::createUpdate([
 							'notifications_id'=>$notificationId??$notification->id,
 							$user->getTable()."_id" =>$user->users_id??$user->id,
-							'orders_id' =>$orderId,
 							'is_seen'         =>0,
-							'type'            =>$type
-						]);
+							'created_at'    =>date('Y-m-d H:i:s'),
+							]);
 			self::sendFCM( $notify ,'user');
 		}
 		return $notificationId??$notification->id;
@@ -74,13 +75,34 @@ class helper extends generalHelp
 
 	public static function sendSms($phone,$code)
     {
-        $app_settings= app_settings::first();
-        $userNameSms= $app_settings->userNameSms;
-        $passwordSms= $app_settings->passwordSmss;
-        $url='https://www.safa-sms.com/api/sendsms.php?username='. $userNameSms.'&password='.$passwordSms.'&message='.$code.'&sender=ANYTHING&numbers='.$phone.'&return=xml@Rmduplicated=1';
-		$url = preg_replace("/ /", "%20", $url);
+		$ch = curl_init();
 
-		self::get_web_page($url);
+		curl_setopt($ch, CURLOPT_URL, "https://www.msegat.com/gw/sendsms.php");
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($ch, CURLOPT_HEADER, TRUE);
+		
+		curl_setopt($ch, CURLOPT_POST, TRUE);
+		
+		$fields = <<<EOT
+		{
+			"apiKey":"43474354e48bbe12c2a804916bece355",
+			"userName":"wwwragssa",
+			"numbers":"{$phone}",
+			"userSender":"kHALED CARS",
+			"msgEncoding":"UTF8",
+			"msg":"كود التحقق :  {$code}"
+		}
+		EOT;
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+		
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+		  "Content-Type: application/json"
+		));
+		
+		$response = curl_exec($ch);
+		$info = curl_getinfo($ch);
+		curl_close($ch);
+		
 	}
 	public static function getbalance()
     {
@@ -90,7 +112,9 @@ class helper extends generalHelp
         $url="https://www.safa-sms.com/api/getbalance.php?username=".$userNameSms."&password=".$passwordSms;
 		return self::get_web_page($url)['content'];
 	}
-	public static function get_web_page( $url, $cookiesIn = '' ){
+
+	public static function get_web_page( $url, $cookiesIn = '' )
+	{
         $options = array(
             CURLOPT_RETURNTRANSFER => true,     // return web page
             CURLOPT_HEADER         => true,     //return headers in addition to content
@@ -127,6 +151,7 @@ class helper extends generalHelp
         $header['cookies'] = $cookiesOut;
 		return $header;
 	}
+
 	public static function translateStatus($status)
     {
 
@@ -150,6 +175,7 @@ class helper extends generalHelp
 		return $array[self::$lang][$status];
 
 	}
+
 	public static function getCityIdBylocation($location)
 	{
 		$geolocation = $location['latitude'].','.$location['longitude'];
@@ -157,11 +183,6 @@ class helper extends generalHelp
 		$file_contents = self::get_web_page($request)['content'];
 		$json_decode = json_decode($file_contents,true);
 		$cityName = isset($json_decode['results'][0]["address_components"][3]["long_name"])? $json_decode['results'][0]["address_components"][3]["long_name"] : $json_decode['results'][1]["formatted_address"];
-// 		$regions = regions::where('regions_id','!=',null)->get()->filter(function($item) use ($cityName) {
-// 			if( stripos($item['name_ar'],$cityName) !== false || stripos($item['name_en'],$cityName) !== false)
-// 				return true;
-// 			return false;
-// 		});
 		$regions = regions::where('regions_id','!=',null)
                           ->where('name_en', 'like', '%' . $cityName . '%')
 		                  ->get();

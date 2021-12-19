@@ -13,10 +13,11 @@ class searchRules extends index
     public static function rules (){
 
         $rules=[
-            "apiToken"              =>"required|",
+            // "apiToken"              =>"required|",
             'price'                 =>'array',
             'price.start'           =>'required_with:price',
             'price.end'             =>'required_with:price',
+            'traderId'              =>'exists:traders,id',
             // 'rooms'                 =>'array',
             // 'rooms.*.adultNums'     =>'required_with:rooms',
             // 'rooms.*.childrenNums'  =>'required_with:rooms',
@@ -31,6 +32,7 @@ class searchRules extends index
             "apiToken.required"     =>400,
             "apiToken.exists"       =>405,
 
+            'traderId.exists'       =>405,
             "price.array"               =>400,
             "price.start.required_with" =>400,
             "price.end.required_with"   =>400,
@@ -65,6 +67,7 @@ class searchRules extends index
         $Validation = helper::{$ValidationFunction}(self::$request->all(), $rules, $messages,self::$lang=="ar"?$messagesAr:$messagesEn);
         if ($Validation !== null) {    return $Validation;    }
 
-        return helper::validateAccount()??null;
+        if(self::$request->apiToken)
+            return helper::validateAccount()??null;
     }
 }

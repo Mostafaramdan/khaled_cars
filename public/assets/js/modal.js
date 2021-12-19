@@ -30,3 +30,12 @@ $(function() {
     });
 
 });
+
+
+	$(document).ready(function() {
+		$('.select2-show-search').select2({
+		 minimumResultsForSearch: '',
+		 placeholder: "Search",
+		 width: '100%'
+	   });
+	});

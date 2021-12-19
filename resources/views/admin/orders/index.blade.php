@@ -58,6 +58,8 @@
                                 <th class="wd-5p border-bottom-0">الضريبة</th>
                                 <th class="wd-10p border-bottom-0">اجمالي المبلغ</th>
                                 <th class="wd-5p border-bottom-0">الحالة</th>
+                                <th class="wd-10p border-bottom-0">المزادات</th>
+                                <th class="wd-10p border-bottom-0">الفاتورة</th>
                                 <th class="wd-10p border-bottom-0">التاريخ</th>
                                 <th class="wd-15p border-bottom-0">العمليات</th>
                             </tr>
@@ -81,7 +83,7 @@
                                                 <form action="{{route('orders.status',$order->id)}}" method="post">
                                                     {{csrf_field()}}
                                                     @method('put')
-                                                    <button type="submit" class="btn btn-sm btn-success pd-x-20">قادم</button>
+                                                    <button type="submit" class="btn btn-sm btn-success pd-x-20">تم الاستلام</button>
                                                 </form>
                                             </td>
                                         @else
@@ -89,10 +91,13 @@
                                                 <form action="{{route('orders.status',$order->id)}}" method="post">
                                                     {{csrf_field()}}
                                                     @method('put')
-                                                    <button type="submit" class="btn btn-sm btn-dark pd-x-20">الانتظار</button>
+                                                    <button type="submit" class="btn btn-sm btn-dark pd-x-20">لم يتم الاستلام</button>
                                                 </form>
                                             </td>
                                     @endif
+                                    <td><a href="bidders?biddings_id={{$order->bidder->biddings_id}}" class='btn btn-dark'><i class="fas fa-eye"></i></a></td>
+                                    <td><a href="/order/{{$order->pdf}}/pdf" class='btn btn-dark'><i class="fas fa-eye"></i></a></td>
+                                    
                                     <td>{{ $order->created_at }}</td>
                                     <td>
                                         <a href="{{ route('orders.show', $order->id) }}" class="btn btn-sm btn-warning"

@@ -9,6 +9,7 @@ use App\Http\Controllers\Apis\Resources\objects;
 use App\Models\bidders;
 use App\Models\insurances;
 use App\Models\biddings;
+use App\Models\users;
 
 class addBidController extends index
 {
@@ -51,6 +52,35 @@ class addBidController extends index
             'biddings_id'=>self::$request->bidId,
             'price'=>self::$request->price,
         ]);
+        $users = users::where('fireBaseToken','!=',null)
+                    ->where('is_active',1)
+                    ->whereHas('bidders',function($q){
+                        return $q->where('biddings_id',self::$request->bidId);
+                    })
+                    ->where('id','!=',self::$account->id)
+                    ->get();
+        if($users->count() > 0){
+            $product = biddings::find(self::$request->bidId)->product;
+            $price = self::$request->price;
+            $content_ar =" تم اضافة عرض جديد بقيمة  {$price} علي السيارة {$product->brand->name_ar} "; 
+            $content_en =" A new offer has been added in {$price} at {$product->brand->name_en}"; 
+            helper::newNotify($users, $content_ar , $content_en,null,self::$request->bidId);
+        }
+
+        // check if end date will end after 5 minutes ;
+        $convertedTime = date('Y-m-d H:i:s', strtotime('+5 minutes', strtotime(date('Y-m-d H:i:s'))));
+        if($record->bidding->end_at <= $convertedTime){
+            $product = biddings::find(self::$request->bidId)->product;
+            $content_ar =" تم مد فترة المزاد الي خمس دقائق إضافية علي السيارة {$product->brand->name_ar} "; 
+            $content_en =" The auction period has been extended to an additional five minutes on the car {$product->brand->name_en}"; 
+            $bidding = biddings::find(self::$request->bidId);
+            $bidding->end_at =  date('Y-m-d H:i:s', strtotime('+5 minutes', strtotime($bidding->end_at)));
+            $bidding->save();
+            $users = users::where('fireBaseToken','!=',null)
+                            ->where('is_active',1)->get();
+            helper::newNotify($users, $content_ar , $content_en,null,self::$request->bidId,'updateEndDate');
+            
+        }
         return [
             "status"=>200,
         ];

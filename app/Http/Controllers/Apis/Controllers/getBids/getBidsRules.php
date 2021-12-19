@@ -13,17 +13,21 @@ class getBidsRules extends index
     public static function rules (){
 
         $rules=[
-            "apiToken"   =>"required|",
-            "page"      =>"required|numeric"
+            "apiToken"  =>"required|",
+            "page"      =>"required|numeric",
+            'traderId'  =>'exists:traders,id',
+
         ];
 
         $messages=[
             "apiToken.required"     =>400,
             "apiToken.exists"       =>405,
 
+            "traderId.exists"       =>405,
+
             "userId.required"       =>400,
             "userId.exists"         =>405,
-
+            
             "page.required"         =>400,
             "page.numeric"          =>405
         ];

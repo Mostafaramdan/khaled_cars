@@ -16,10 +16,10 @@ class forgetPasswordController extends index
     $session =  sessions::createUpdate([
                     self::$account->getTable().'_id'=>self::$account->id,
                     'tmp_token'=>helper::UniqueRandomXChar(69,'tmp_token',['sessions']),
-                    // 'code'=>helper::RandomXDigits(5)
-                    'code'=>12345
+                    'code'=>helper::RandomXDigits(5)
+                    // 'code'=>12345
                 ]);
-    // helper::sendSms( self::$account->phone, $session->code );
+    helper::sendSms( self::$account->phone, $session->code );
     return ['status'=>200,'tmpToken'=>$session->tmp_token];
 
     }

@@ -51,6 +51,16 @@
                                 <td>{{ $order->bidder->bidding->product->name_ar}} </td>
                             </tr>
                             <tr>
+                                <th>التاجر</th>
+                                @if($order->bidder->bidding->trader->type == 'company')
+                                    <td>  <span style="color: limegreen">( شركة )</span>  {{ $order->bidder->bidding->trader->name}}</td>
+                                @elseif($order->bidder->bidding->trader->type == 'bank')
+                                    <td>  <span style="color: #dc2a2a">( بنك )</span>  {{ $order->bidder->bidding->trader->name }}</td>
+                                @endif
+                                <th>التاريخ</th>
+                                <td>{{ $order->created_at}} </td>
+                            </tr>
+                            <tr>
                                 <th>موديل المنتج</th>
                                 <td>{{ $order->bidder->bidding->product->model->model }} </td>
                                 <th>سنة الصنع</th>
@@ -76,24 +86,14 @@
                             <tr>
                                 <th>العلامة التجارية للمنتج</th>
                                 <td>{{ $order->bidder->bidding->product->brand->name_ar }}</td>
-                                <th>مبلغ تأمين المزاد</th>
-                                <td>{{ $order->bidder->bidding->Insurance}} </td>
+                                <th>تاريخ انتهاء المزايدة </th>
+                                <td>{{ $order->bidder->bidding->end_at}} </td>
                             </tr>
                             <tr>
                                 <th>الحد الأدني للمزاد</th>
                                 <td>{{ $order->bidder->bidding->min_auction}} </td>
                                 <th> نوع المزاد</th>
                                 <td>{{ $order->bidder->bidding->type == 'open' ? 'مفتوح' : 'مغلق' }} </td>
-                            </tr>
-                            <tr>
-                                <th>التاريخ</th>
-                                <td>{{ $order->created_at}} </td>
-                                <th>التاجر</th>
-                                @if($order->bidder->bidding->trader->type == 'company')
-                                    <td>  <span style="color: limegreen">( شركة )</span>  {{ $order->bidder->bidding->trader->name}}</td>
-                                @elseif($order->bidder->bidding->trader->type == 'bank')
-                                    <td>  <span style="color: #dc2a2a">( بنك )</span>  {{ $order->bidder->bidding->trader->name }}</td>
-                                @endif
                             </tr>
                             <tr>
                                 <th>سعر الشراء</th>

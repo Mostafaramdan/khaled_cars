@@ -51,7 +51,7 @@
                                 </div>
                                 <label for="exampleInputEmail1"><h4><strong>بيانات المنتج</strong></h4></label>
                                 <br>
-                                <div>
+                                <!-- <div>
                                     <label for="exampleInputEmail1">الأسم بالعربية : <span class="tx-danger">*</span> </label>
                                     <input type="text" value="{{old('name_ar',$bidding->product->name_ar)}}" class="form-control" id="name_ar" name="name_ar" required>
                                     @error('name_ar')<span class="text-danger">{{ $message }}</span>@enderror
@@ -61,19 +61,30 @@
                                     <label for="exampleInputEmail1">الأسم بالأنجليزية : <span class="tx-danger">*</span> </label>
                                     <input type="text" value="{{old('name_en',$bidding->product->name_en)}}" class="form-control" id="name_en" name="name_en" required>
                                     @error('name_en')<span class="text-danger">{{ $message }}</span>@enderror
-                                </div>
+                                </div> -->
                                 <br>
                                 <div>
                                     <label for="exampleInputEmail1">حالة المنتج : <span class="tx-danger">*</span> </label>
                                     <select class="form-control"  name="status" id="status">
                                         <option value="" @if (old('status', $bidding->product->status == ''))  SELECTED @endif>--- اختر حالة المنتج ---</option>
-                                        <option value="new" @if (old('status', $bidding->product->status == 'new'))  SELECTED @endif>جديد</option>
-                                        <option value="antique" @if (old('status', $bidding->product->status == 'antique'))  SELECTED @endif>عتيق</option>
+                                        <option value="new" @if (old('status', $bidding->product->status == 'new'))  SELECTED @endif>سليم</option>
+                                        <!-- <option value="antique" @if (old('status', $bidding->product->status == 'antique'))  SELECTED @endif>عتيق</option> -->
                                         <option value="rare" @if (old('status', $bidding->product->status == 'rare'))  SELECTED @endif>نادر</option>
-                                        <option value="slight_damage" @if (old('status', $bidding->product->status == 'slight_damage'))  SELECTED @endif >ضرر طفيف</option>
-                                        <option value="damage" @if (old('status', $bidding->product->status == 'damage'))  SELECTED @endif>محطم</option>
+                                        <option value="slight_damage" @if (old('status', $bidding->product->status == 'slight_damage'))  SELECTED @endif >مصدوم </option>
+                                        <option value="damage" @if (old('status', $bidding->product->status == 'damage'))  SELECTED @endif>حطام</option>
                                     </select>
                                 </div>
+                                <div>
+                            <label for="carType">نوع السيارة : <span class="tx-danger">*</span> </label>
+                            <select class="form-control"  name="car_type" id="car_type">
+                                <option value="sedan" @if (old('status', $bidding->product->car_type == 'sedan'))  SELECTED @endif>سيدان </option>
+                                <option value="Jeep"@if (old('status', $bidding->product->car_type == 'Jeep'))  SELECTED @endif >جيب</option>
+                                <option value="hatchback"@if (old('status', $bidding->product->car_type == 'hatchback'))  SELECTED @endif >هاتشباك</option>
+                                <option value="Pick-Up" @if (old('status', $bidding->product->car_type == 'Pick-Up'))  SELECTED @endif >بكب </option>
+                            </select>
+                        </div>
+                        <br>
+
                                 <br>
                                 <div class="row">
                                     <div class="col-12">
@@ -132,12 +143,26 @@
                                 <hr>
                                 <label for="exampleInputEmail1"><h4><strong>بيانات المزاد</strong></h4></label>
                                 <br>
+
+                                <div>
+                                    <label for="exampleInputEmail12">   المبلع المبدأي للمزاد   : <span class="tx-danger">*</span> </label>
+                                    <input type="text" value="{{old('initial_auction',$bidding->initial_auction)}}" class="form-control" id="initial_auction" name="initial_auction" required>
+                                    @error('initial_auction')<span class="text-danger">{{ $message }}</span>@enderror
+                                </div>
+                                <br>
+
                                 <div>
                                     <label for="exampleInputEmail1">الحد الأدني للمزاد : <span class="tx-danger">*</span> </label>
                                     <input type="text" value="{{old('min_auction',$bidding->min_auction)}}" class="form-control" id="min_auction" name="min_auction" required>
                                     @error('min_auction')<span class="text-danger">{{ $message }}</span>@enderror
                                 </div>
                                 <br>
+                                <div>
+                                    <label for="exampleInputEmail1"> الضريبة % : <span class="tx-danger">*</span> </label>
+                                    <input type="number" class="form-control" id="fees" name="fees" required min=0 value="{{old('fees',$bidding->fees)}}">
+                                    @error('fees')<span class="text-danger">{{ $message }}</span>@enderror
+                                </div>
+
 <!--                                <div>
                                     <label for="exampleInputEmail1">مبلغ التأمين : <span class="tx-danger">*</span> </label>
                                     <input type="text" value="{{old('Insurance',$bidding->Insurance)}}" class="form-control" id="Insurance" name="Insurance" required>
@@ -154,12 +179,12 @@
                                 </div>
                                 <br>
                                 <div>
-                                    <label for="exampleInputEmail1">تاريخ انتهاء المزاد : <span class="tx-danger">*</span> </label>
-                                    <input type="date" class="form-control" id="end_at" name="end_at" >
+                                    <label for="exampleInputEmail1">تاريخ انتهاء المزاد : ({{$bidding->end_at}})<span class="tx-danger">*</span> </label>
+                                    <input type="datetime-local" class="form-control" id="end_at" name="end_at"  value="{{$bidding->end_at}}">
                                     @error('end_at')<span class="text-danger">{{ $message }}</span>@enderror
                                 </div>
                                 <br>
-                                @if (auth('admin')->check())
+                                <!-- @if (auth('admin')->check())
                                 @if($bidding->trader->type == 'bank')
                                     <div>
                                         <label for="exampleInputEmail1">البنك : <span class="tx-danger">*</span> </label>
@@ -183,7 +208,7 @@
                                     </div>
                                     <br>
                                 @endif
-                                @endif
+                                @endif -->
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-12 text-center">

@@ -74,10 +74,18 @@ return [
         ],
         "deleteService"=>[
             "403"=>"ليس من حقك مسح هذه الخدمة "
-        ]
+        ],
+        'new'=>'سليم',
+        'rare'=>'نادر',
+        'slight_damage'=>'مصدوم',
+        'damage'=>'حطام'
 
     ],
     "en"=>[
+        'new'=>'new',
+        'rare'=>'rare',
+        'slight_damage'=>'slight_damage',
+        'damage'=>'damage',
         "register"=>[
             "200"=>"registered successfully"
         ],

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class notifications extends Model
 {
-    protected $table = 'notifications', $fillable = ['content_ar','content_en','type','created_at'];
+    protected $table = 'notifications', $fillable = ['content_ar','content_en','type','biddings_id','created_at'];
     public $timestamps=false;
 
     public function notify(){

@@ -12,23 +12,18 @@ class getBidsByATraderController extends index
 {
     public static function api()
     {
-        $records=  helper::get(
-            model::where('traders_id',self::$request->traderId)
-                ->when(self::$request->type,function($q){
-                    if(self::$request->type == 'closed')
-                        $q->whereHas('bidders',function($q){
-                            return $q->whereHas('orders');
-                        });
-                    else
-                        $q->where(function($q){
-                            return $q->whereHas('bidders',function($q){
-                                $q->whereDoesntHave('orders');
-                            })
-                            ->orWhereDoesntHave('bidders');
-                        });
-                })
 
-        );
+        $records=  helper::get(
+                        model::where('traders_id',self::$request->traderId)
+                                ->where(function($q){
+                                    if(self::$request->type == 'close'){
+                                        return $q->where('biddings.has_order',1);
+                                    }elseif(self::$request->type == 'open'){
+                                        return $q->where('biddings.has_order',null);
+                                }
+                            })
+                            ->orderBy('id','DESC')
+                    );
         return [
             "status"=>$records[2],
             "totalPages"=>$records[1],

@@ -92,6 +92,7 @@ class BiddingController extends Controller
 
     public function store(Request $request)
     {
+        return 10;
         $validate = Validator::make($request->all(), [
             //Bidding
             'Insurance' => 'required|numeric',
@@ -100,8 +101,8 @@ class BiddingController extends Controller
             'end_at' =>'required',
 
             //Product
-            'name_ar' => 'required',
-            'name_en' => 'required',
+            // 'name_ar' => 'required',
+            // 'name_en' => 'required',
             'models_id' => 'required',
             'model_years_id' => 'required',
             'status' => 'required',
@@ -185,8 +186,8 @@ class BiddingController extends Controller
             'end_at' =>'nullable',
 
             //Product
-            'name_ar' => 'required',
-            'name_en' => 'required',
+            // 'name_ar' => 'required',
+            // 'name_en' => 'required',
             'models_id' => 'required',
             'model_years_id' => 'required',
             'status' => 'required',

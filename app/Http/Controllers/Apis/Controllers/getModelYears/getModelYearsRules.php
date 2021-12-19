@@ -13,7 +13,7 @@ class getModelYearsRules extends index
     public static function rules (){
 
         $rules=[
-            "apiToken"   =>"required|",
+            // "apiToken"   =>"required|",
             "brandId"     =>"required|exists:brands,id",
         ];
 
@@ -39,6 +39,7 @@ class getModelYearsRules extends index
         $Validation = helper::{$ValidationFunction}(self::$request->all(), $rules, $messages,self::$lang=="ar"?$messagesAr:$messagesEn);
         if ($Validation !== null) {    return $Validation;    }
 
-        return helper::validateAccount()??null;
+        if(self::$request->apiToken)
+            return helper::validateAccount()??null;
     }
 }

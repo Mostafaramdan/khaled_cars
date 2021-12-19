@@ -56,8 +56,8 @@ class generalHelp extends index
 		fclose($file);
 		return "/".$folderPath.$path;
 	}
-	public static function uploadPhoto($image,$folderName){
-		
+	public static function uploadPhoto($image,$folderName)
+	{
 		$folderPath="uploads/{$folderName}//";
 		if (!file_exists( $folderPath))
 					mkdir( $folderPath, 0777, true);
@@ -66,7 +66,8 @@ class generalHelp extends index
 			return '/'.$folderPath.$img_name;
 	}
 
-	public static function chkifSendTwominute($session){
+	public static function chkifSendTwominute($session)
+	{
 		$now= (Carbon::parse('now')->subMinutes(2))->format('Y-m-d H:i:s');
 		return	($session->created_at <= $now)?true:false;
 	}
@@ -119,22 +120,23 @@ class generalHelp extends index
 		return $record;
 	}
 
-	public static function RandomXDigits ($Digits=6) {
-			return rand(pow(10, $Digits-1), pow(10, $Digits)-1);
+	public static function RandomXDigits ($Digits=6) 
+	{
+		return rand(pow(10, $Digits-1), pow(10, $Digits)-1);
 	}
 
-	public static function UniqueRandomXDigits ($Digits=6,$column) {
-
-			$code= rand(pow(10, $Digits-1), pow(10, $Digits)-1);
-			$models=self::$providers;
-			for($i=0;$i<count($models);$i++){
-				$model='\App\Models\\'.$models[$i];
-				if($model::where($column,$code)->count() != 0){
-					$code= rand(pow(10, $Digits-1), pow(10, $Digits)-1);
-					$i=0;
-				}
+	public static function UniqueRandomXDigits ($Digits=6,$column)
+	 {
+		$code= rand(pow(10, $Digits-1), pow(10, $Digits)-1);
+		$models=self::$providers;
+		for($i=0;$i<count($models);$i++){
+			$model='\App\Models\\'.$models[$i];
+			if($model::where($column,$code)->count() != 0){
+				$code= rand(pow(10, $Digits-1), pow(10, $Digits)-1);
+				$i=0;
 			}
-			return $code;
+		}
+		return $code;
 	}
 
 	public static function UniqueRandomXChar ($Chars=69,$column,$models=[])
@@ -177,14 +179,15 @@ class generalHelp extends index
 		return true;
 	}
 
-	public static function changePassword(){
+	public static function changePassword()
+	{
 		$account=index::$account;
 		$account->password= self::HashPassword(index::$request->newPassword);
 		$account->save();
 	}
 
-	public static function updatePassword(){
-
+	public static function updatePassword()
+	{
 		if (Hash::check(self::$request->oldPassword ,self::$account->password ) == false) {
 			return false;
 		}else{
@@ -194,8 +197,8 @@ class generalHelp extends index
 		}
 	}
 
-	public static function setAccountByession(){
-
+	public static function setAccountByession()
+	{
 		$key=self::$request->has('phone')?'tmp_phone':'tmp_email';
 		$value=self::$request->has('phone')?self::$request->phone:self::$request->email;
 		$seeions = $session=sessions::where($key,self::$request->phone)->first();
@@ -211,7 +214,8 @@ class generalHelp extends index
 		}
 	}
 
-	public static function validator ($Request, $Rules, $Messages,$messagesLang){
+	public static function validator ($Request, $Rules, $Messages,$messagesLang)
+	{
 		$validator = Validator::make($Request, $Rules, $Messages);
 
 		$code=null;
@@ -227,7 +231,8 @@ class generalHelp extends index
 			return ['status'=>(int)$code,'message'=>$message];
 	}
 
-	public static function showAllErrors ($Request, $Rules, $Messages,$messagesLang){
+	public static function showAllErrors ($Request, $Rules, $Messages,$messagesLang)
+	{
 		$validator = Validator::make($Request, $Rules, $Messages);
 		$code=null;
 		if ($validator->fails()) {
@@ -242,7 +247,8 @@ class generalHelp extends index
 			return ['status'=>$code,'message'=>$message];
 	}
 
-	public static function distance($lat1, $lon1, $lat2, $lon2) {
+	public static function distance($lat1, $lon1, $lat2, $lon2) 
+	{
 		$theta = $lon1 - $lon2;
 		$dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
 		$dist = acos($dist);
@@ -251,43 +257,34 @@ class generalHelp extends index
 		//$unit = strtoupper($unit);
 
 		return ($miles * 1.609344);
-
 	}
 
-	public static function isExpiredSession($session,$minutes){
+	public static function isExpiredSession($session,$minutes)
+	{
 		$now= (Carbon::parse('now')->subMinutes($minutes));
 		return $session->created_at < $now ?true : false ;
 	}
 
-	public static function sendFCM($pushNotify,$target) {
+	public static function sendFCM($pushNotify,$target) 
+	{
 		$url = 'https://fcm.googleapis.com/fcm/send';
-		$offers_id=null;
-		$products_id=null;
-		if( $pushNotify->notifications->products_id){
-			if( $pushNotify->notifications->product->in_offer_now){
-				$offers_id = $pushNotify->notifications->products_id;
-			}else{
-				$products_id= $pushNotify->notifications->products_id;
-			}
-		}
 		$fields = [
-			"to" => $pushNotify->$target->fireBaseToken,
+			"to" => $pushNotify->user->fireBaseToken,
 			"notification" => [
-				"title" =>"Igreen",
-				"body" => $pushNotify->notifications['content_'.$pushNotify->$target->lang],
+				"title" =>"Khaled Car",
+				"body" => $pushNotify->notification['content_'.$pushNotify->user->lang],
 				"icon" => "myicon",
-				"sound" => "notify.mp3"
+				"sound" => "notify",
+				"click_action"=> "FLUTTER_NOTIFICATION_CLICK"
 			],
 			"data"=>[
-				"productId" =>  $products_id,
-				"offerId" => $offers_id,
-				"categoryId" =>  $pushNotify->notifications->categories_id,
-				"orderId" =>  $pushNotify->notifications->orders_id,
-				"type" => $pushNotify->notifications->type,
+				"orderId" =>  $pushNotify->notification->orders_id,
+				"bidId" =>  $pushNotify->notification->biddings_id,
+				"type" => $pushNotify->notification->type,
 			],
 		];
 		$fields = json_encode ( $fields );
-		$key = 'AAAALLByHOc:APA91bGsTfep_Wsdt4VAFXeO38EF1RJuyGYoGJadlwycy1WG6V8EmMgLxIMNInZTHlCq8bbdsjsdHhKBBm2FXmzO8LTYkG05g9a47B6o9oAy4EIWnHYwOyWLYrAg2z_S5h1QTcUlWirU';
+		$key = 'AAAAyafs1No:APA91bGhxUGwt39Y8w-5jDOxFDAgRZcS7w56jnggxbnVhuzd2gRzIaV0mxWNMobcqw_O0JZoi9LPiv9aR9xOjqEsG8YVNxnquQFl7oHciFo6Nnb_sScXJX248OykfgWxcNnEHSftPC1v';
 		$headers = [
 			'Authorization: key='.$key,
 			'Content-Type: application/json'
@@ -306,7 +303,9 @@ class generalHelp extends index
 		// }
 	}
 
-	public static function deleteFile($path){
+	
+	public static function deleteFile($path)
+	{
 		File::delete($_SERVER['DOCUMENT_ROOT'].$path); // Value is not URL but directory file path
 	}
 }

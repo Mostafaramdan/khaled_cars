@@ -15,7 +15,8 @@ class orders extends Model
         'price',
         'fees',
         'total',
-        'bidders_id'
+        'bidders_id',
+        'pdf'
     ];
 
 
@@ -23,5 +24,6 @@ class orders extends Model
     {
         return $this->belongsTo(bidders::class,'bidders_id');
     }
+   
 
 }

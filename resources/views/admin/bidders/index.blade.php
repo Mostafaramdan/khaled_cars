@@ -79,7 +79,9 @@
 
                             </tbody>
                         </table>
-                        <br><div class="text-center">{!! $bidders->links('layouts.pagination') !!}</div>
+                        @if(!$biddings_id)
+                            <br><div class="text-center">{!! $bidders->links('layouts.pagination') !!}</div>
+                        @endif
                     </div>
                 </div>
             </div>

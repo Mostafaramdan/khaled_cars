@@ -9,13 +9,15 @@ class biddings extends Model
 {
     use HasFactory;
     protected $table = 'biddings';
-    public $timestamps = false,$appends=['max_auction'];
+    public $timestamps = false,$appends=['max_auction','status'];
     protected $fillable = [
         'products_id',
         'Insurance',
         'min_auction',
         'type',
         'traders_id',
+        'has_order',
+        'fees',
     ];
 
     public function insurances(){
@@ -49,6 +51,10 @@ class biddings extends Model
     function GetMaxAuctionAttribute()
     {
         return $this->bidders->max('price');
+    }
+    function GetStatusAttribute()
+    {
+        return $this->end_at > date('Y-m-d H:i:s') ? 'open' : 'finidshed';
     }
 
 }

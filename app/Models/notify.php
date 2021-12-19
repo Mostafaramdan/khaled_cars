@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class notify extends GeneralModel
 {
     protected   $table = 'notify',
-                $appends=['type','target_user'];
+                $appends=['type','target_user'],$guarded=[];
 
     public static function createUpdate($params){
 
@@ -32,4 +32,5 @@ class notify extends GeneralModel
     function GetTargetUserAttribute(){
         return $this->user ;
     }
+    
 }

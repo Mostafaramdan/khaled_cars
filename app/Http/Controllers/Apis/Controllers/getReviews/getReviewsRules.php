@@ -14,7 +14,7 @@ class getReviewsRules extends index
     {
 
         $rules=[
-            "apiToken"   =>"required|",
+            // "apiToken"   =>"required|",
             "bidId"     =>"required|exists:biddings,id",
             "page"      =>"required|numeric"
         ];
@@ -47,6 +47,7 @@ class getReviewsRules extends index
         $Validation = helper::{$ValidationFunction}(self::$request->all(), $rules, $messages,self::$lang=="ar"?$messagesAr:$messagesEn);
         if ($Validation !== null) {    return $Validation;    }
 
-        return helper::validateAccount()??null;
+        if(self::$request->apiToken)
+            return helper::validateAccount()??null;
     }
 }

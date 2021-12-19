@@ -13,7 +13,7 @@ class getBidRules extends index
     public static function rules (){
 
         $rules=[
-            "apiToken"   =>"required|",
+            // "apiToken"   =>"required|",
             "id"     =>"required|exists:biddings,id",
         ];
 
@@ -41,6 +41,7 @@ class getBidRules extends index
         $Validation = helper::{$ValidationFunction}(self::$request->all(), $rules, $messages,self::$lang=="ar"?$messagesAr:$messagesEn);
         if ($Validation !== null) {    return $Validation;    }
 
-        return helper::validateAccount()??null;
+        if(self::$request->apiToken)
+            return helper::validateAccount()??null;
     }
 }
